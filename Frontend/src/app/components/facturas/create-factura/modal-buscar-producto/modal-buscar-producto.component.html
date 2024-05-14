@@ -1,0 +1,69 @@
+<div class="modal fade" id="modal-buscar-producto" >
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header header-modal" style="background-color: rgb(58, 151, 185);">
+                <h4 class="modal-title" style="color: #ffffff">{{title}}</h4>
+                <button type="button" id="button-x" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="card-body">
+                <div class="modal-body table-responsive">
+                    <div *ngIf="loading" class="text-center">
+                        <i class="fa fa-spinner fa-spin"></i> Cargando datos...
+                    </div>
+                    <table id="productos"
+                        class="table table-hover table-striped table-bordered dataTable dtr-inline table-sm" role="grid"
+                        *ngIf="productos?.length > 0 && !loading">
+                        <thead>
+                            <tr>
+                                <th>Serie</th>
+                                <th>Codigo</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Precio Sugerido</th>
+                                <th>Stock</th>
+                                <th>Proveedor</th>
+                                <th>Categoria</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr *ngFor="let producto of productos">
+                                <td>{{ producto.serie }}</td>
+                                <td>{{ producto.codProducto }}</td>
+                                <td>{{ producto.nombre }}</td>
+                                <td>{{ producto.precioVenta | currency: "Q" : "symbol" }}</td>
+                                <td>{{ (producto.precioSugerido ? producto.precioSugerido : 0) | currency: "Q" : "symbol" }}</td>
+                                <td>{{ producto.stock }}</td>
+                                <td>{{ producto.proveedor ? producto.proveedor.nombre : '' }}</td>
+                                <td>{{ producto.tipoProducto ? producto.tipoProducto.tipoProducto : '' }}</td>
+                                <td class="center-options">
+                                    <button class="btn bg-gradient-cyan" (click)="chooseProducto(producto)">
+                                        Elegir
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                        <tfoot>
+                            <tr>
+                                <th>Serie</th>
+                                <th>Codigo</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Precio Sugerido</th>
+                                <th>Stock</th>
+                                <th>Proveedor</th>
+                                <th>Categoria</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
