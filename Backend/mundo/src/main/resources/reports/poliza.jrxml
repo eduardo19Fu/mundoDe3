@@ -68,16 +68,12 @@ order by p.nombre asc]]>
 				</graphicElement>
 			</rectangle>
 			<staticText>
-				<reportElement x="131" y="19" width="385" height="39" uuid="059e714e-15d9-4bef-a236-e7361c3b4001"/>
+				<reportElement x="0" y="19" width="571" height="39" uuid="059e714e-15d9-4bef-a236-e7361c3b4001"/>
 				<textElement textAlignment="Center">
 					<font size="19" isBold="true"/>
 				</textElement>
 				<text><![CDATA[POLIZA DE INGRESO POR VENDEDOR]]></text>
 			</staticText>
-			<image>
-				<reportElement x="11" y="1" width="120" height="70" uuid="efa566a4-a99c-404c-bd9d-6537ec37cbf5"/>
-				<imageExpression><![CDATA[this.getClass().getResourceAsStream("/static/images/reports-image/techos-logo.jpeg")]]></imageExpression>
-			</image>
 		</band>
 	</title>
 	<pageHeader>

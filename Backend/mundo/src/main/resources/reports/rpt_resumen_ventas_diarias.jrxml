@@ -84,16 +84,12 @@ GROUP BY facs.no_factura]]>
 	<title>
 		<band height="82" splitType="Stretch">
 			<textField pattern="dd-MM-yyyy">
-				<reportElement x="100" y="0" width="470" height="69" uuid="8f69b6da-1eb1-4bd3-abb6-caa3dec9b3f0"/>
+				<reportElement x="0" y="0" width="570" height="69" uuid="8f69b6da-1eb1-4bd3-abb6-caa3dec9b3f0"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["VENTAS REALIZADAS EL: " + new SimpleDateFormat("dd-MM-yyyy").format($P{pFecha})]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="0" y="0" width="130" height="79" uuid="9b79b9d4-c48a-4618-874a-89c1f5247695"/>
-				<imageExpression><![CDATA[this.getClass().getResourceAsStream("/static/images/reports-image/techos-logo.jpeg")]]></imageExpression>
-			</image>
 		</band>
 	</title>
 	<pageHeader>

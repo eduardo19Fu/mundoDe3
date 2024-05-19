@@ -113,19 +113,6 @@ WHERE f.id_factura =  $P{idfactura}]]>
 	</title>
 	<pageHeader>
 		<band height="89" splitType="Stretch">
-			<image scaleImage="FillFrame">
-				<reportElement x="24" y="2" width="82" height="62" uuid="4f60832d-0e14-4e65-901f-a4355a943110"/>
-				<imageExpression><![CDATA[this.getClass().getResourceAsStream("/static/images/reports-image/techos-logo.jpeg")]]></imageExpression>
-			</image>
-			<staticText>
-				<reportElement x="24" y="58" width="138" height="31" isPrintWhenDetailOverflows="true" uuid="f2905273-c25e-4135-8a12-46fcfac10f9b"/>
-				<textElement textAlignment="Center">
-					<font size="7" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Calzada Justo Rufino Barrios
-Media cuadra adelante de la Purina
-Teléfono: 50112831 - 45545833]]></text>
-			</staticText>
 			<line>
 				<reportElement x="180" y="30" width="1" height="50" uuid="460ca240-b9e1-4eca-ae4f-5f699366cad5">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
