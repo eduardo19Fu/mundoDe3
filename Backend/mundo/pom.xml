@@ -10,9 +10,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.aglayatech</groupId>
-    <artifactId>techosoriente</artifactId>
+    <artifactId>mundo3</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>techosoriente</name>
+    <name>mundo3</name>
     <description>Punto de venta e inventario para ferreteria Techos de Oriente</description>
     <properties>
         <java.version>1.8</java.version>
