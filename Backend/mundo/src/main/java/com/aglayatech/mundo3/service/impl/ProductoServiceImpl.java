@@ -140,13 +140,14 @@ public class ProductoServiceImpl implements IProductoService {
 				producto.setPrecioVenta(item.getProducto().getPrecioVenta());
 				producto.setPrecioSugerido(item.getProducto().getPrecioSugerido());
 				producto.setPorcentajeGanancia(item.getProducto().getPorcentajeGanancia());
-				this.updateExistencias(producto, item.getCantidad(), tipoMovimiento.toUpperCase());
-			} else if (producto == null) {
+			} else {
 				producto = item.getProducto();
 				producto.setEstado(estadoProductoNuevo);
 				producto.setFechaIngreso(simpleDateFormat.parse(fechaIngreso.toString()));
+				producto.setStock(0);
 			}
 
+			updateExistencias(producto, item.getCantidad(), tipoMovimiento.toUpperCase());
 			save(producto);
 			return true;
 		} catch(DataAccessException | ParseException e) {
@@ -170,9 +171,11 @@ public class ProductoServiceImpl implements IProductoService {
 
 		switch (tipoMovimiento) {
 			case "COMPRA":
+			case "ENTRADA":
 			case "ANULACION_FACTURA":
 				producto.setStock(producto.getStock() + cantidad);
 				break;
+			case "SALIDA":
 			case "ELIMINAR_COMPRA":
 			case "VENTA":
 				producto.setStock(producto.getStock() - cantidad);
