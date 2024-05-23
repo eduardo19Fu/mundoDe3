@@ -10,6 +10,8 @@ import java.util.*;
 import javax.sql.DataSource;
 
 import com.aglayatech.mundo3.model.TipoMovimiento;
+import com.aglayatech.mundo3.service.IProductoService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,10 +30,14 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 
 @Service
+@Slf4j
 public class MovimientoProductoServiceImpl implements IMovimientoProductoService {
 
 	@Autowired
 	private IMovimientoProductoRepository repoMovimiento;
+
+	@Autowired
+	private IProductoService productoService;
 	
 	@Autowired
 	private DataSource localDateSource;
@@ -64,6 +70,47 @@ public class MovimientoProductoServiceImpl implements IMovimientoProductoService
 	@Override
 	public List<MovimientoProducto> findByFecha(Date fechaIni, Date fechaFin) {
 		return repoMovimiento.findByFechaMovimientoBetween(fechaIni, fechaFin);
+	}
+
+	/**
+	 * Método encargado de llevar a cabo la suma o resta de existencias dependiendo del tipo de movimiento que se
+	 * esté llevando a cabo.
+	 * @param movimientoProducto Objeto de tipo MovimientoProducto que guarda los datos a operar
+	 * @return boolean Devuelve un valor verdadero si el procedimiento de guardado de las nuevas existencias del producto se ha
+	 *         llevado a cabo con éxito.
+	 *
+	 * */
+	public boolean calcularStock(MovimientoProducto movimientoProducto) {
+		int tmpStock = 0;
+		Producto producto = null;
+		Producto productoSaved = null;
+
+		try {
+			tmpStock = movimientoProducto.getProducto().getStock();
+			producto = movimientoProducto.getProducto();
+			movimientoProducto.setStockInicial(tmpStock);
+
+			switch (movimientoProducto.getTipoMovimiento().getTipoMovimiento()) {
+				case "VENTA":
+				case "SALIDA":
+					log.debug("Operando salidas al stock por operaciones de tipo VENTA, SALIDA");
+					producto.setStock(tmpStock - movimientoProducto.getCantidad());
+					break;
+				case "COMPRA":
+				case "ENTRADA":
+					log.debug("Operando suma al stock por operaciones de tipo COMPRA, ENTRADA");
+					producto.setStock(tmpStock + movimientoProducto.getCantidad());
+				default:
+					log.debug("No existe la operación deseada");
+					break;
+			}
+
+			productoSaved = productoService.save(producto);
+		} catch (Exception ex) {
+			log.error("Error: {}", ex);
+		}
+
+		return (productoSaved != null);
 	}
 
 	/********* PDF REPORTS SERVICES ***********/

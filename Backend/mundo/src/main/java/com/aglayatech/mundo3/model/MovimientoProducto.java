@@ -114,7 +114,9 @@ public class MovimientoProducto implements Serializable {
 			this.setStockInicial(tempStock);
 			this.producto.setStock((tempStock + this.getCantidad()));
 
-		} else if(this.getTipoMovimiento().getTipoMovimiento().equals("SALIDA") || this.getTipoMovimiento().getTipoMovimiento().equals("VENTA")){
+		} else if(this.getTipoMovimiento().getTipoMovimiento().equals("SALIDA") || this.getTipoMovimiento().getTipoMovimiento().equals("VENTA")
+				|| this.getTipoMovimiento().getTipoMovimiento().equals("ELIMINAR_COMPRA")) {
+
 			int tempStock = this.producto.getStock();
 			this.setStockInicial(tempStock);
 			this.producto.setStock((tempStock - this.getCantidad()));

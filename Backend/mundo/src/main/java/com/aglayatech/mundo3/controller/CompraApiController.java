@@ -7,6 +7,7 @@ import com.aglayatech.mundo3.model.Estado;
 import com.aglayatech.mundo3.model.MovimientoProducto;
 import com.aglayatech.mundo3.model.Producto;
 import com.aglayatech.mundo3.model.TipoComprobante;
+import com.aglayatech.mundo3.model.Usuario;
 import com.aglayatech.mundo3.service.ICompraService;
 import com.aglayatech.mundo3.service.IEstadoService;
 import com.aglayatech.mundo3.service.IMovimientoProductoService;
@@ -103,9 +104,7 @@ public class CompraApiController {
 
             // Recorrer item por item para validr si los productos existen o no.
             for(DetalleCompra item : compra.getItems()) {
-                if (this.crearProducto(item, compra.getFechaCompra())) {
-                    this.movimiento(item.getProducto(), compra, item.getCantidad());
-                }
+                crearProducto(item, compra.getFechaCompra(), compra.getUsuario());
             }
 
             newCompra = this.compraService.save(compra);
@@ -170,6 +169,7 @@ public class CompraApiController {
             compra = compraService.getCompra(idcompra);
 
             for(DetalleCompra item : compra.getItems()) {
+                movimiento(item.getProducto(), compra.getUsuario(), item.getCantidad(), "eliminar_compra".toUpperCase());
                 updateExistencias(item.getProducto(), item.getCantidad(), "eliminar_compra".toUpperCase());
             }
 
@@ -215,22 +215,22 @@ public class CompraApiController {
     }
 
     /**
-     * Función que opera las existencias en los movimientos de producto para inventario.
+     * Método que opera las existencias en los movimientos de producto para inventario.
      *
      * @param producto Recibe el producto como parámetro para se operado.
-     * @param compra Recibe la compra generada para ser operada.
+     * @param usuario Recibe la compra generada para ser operada.
      * @param cantidad Recibe la cantidad de producto a operar
      *
      * */
-    public void movimiento(Producto producto, Compra compra, int cantidad) {
+    public void movimiento(Producto producto, Usuario usuario, int cantidad, String tipoMovimiento) {
         MovimientoProducto movimiento = new MovimientoProducto();
 
-        movimiento.setTipoMovimiento(movimientoProductoService.findTipoMovimiento("COMPRA"));
-        movimiento.setUsuario(compra.getUsuario());
+        movimiento.setTipoMovimiento(movimientoProductoService.findTipoMovimiento(tipoMovimiento));
+        movimiento.setUsuario(usuario);
         movimiento.setProducto(producto);
         movimiento.setStockInicial(producto.getStock());
         movimiento.setCantidad(cantidad);
-        movimiento.calcularStock();
+        // movimiento.calcularStock();
 
         movimientoProductoService.save(movimiento);
     }
@@ -244,23 +244,26 @@ public class CompraApiController {
      * @exception DataAccessException Lanza una posible excepcion en caso de ocurrir un problema a nivel de base de datos del tipo
      *
      * */
-    private boolean crearProducto(DetalleCompra item, LocalDate fechaIngreso) {
-        Producto producto = null;
+    private boolean crearProducto(DetalleCompra item, LocalDate fechaIngreso, Usuario usuario) {
+        Producto producto = null, productoParametro = null;
         Estado estadoProductoNuevo = null;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         try {
             estadoProductoNuevo = this.estadoService.findByEstado("activo".toUpperCase());
 
-              if(item.getProducto().getIdProducto() != null) {
-                this.updateExistencias(item.getProducto(), item.getCantidad(), "compra".toUpperCase());
-              } else {
+            if(item.getProducto().getIdProducto() == null) {
                 producto = item.getProducto();
                 producto.setEstado(estadoProductoNuevo);
                 producto.setFechaIngreso(simpleDateFormat.parse(fechaIngreso.toString()));
-                // producto.stock() debe ir a cero para evitar que el movimiento del producto sume exitencias
-                this.productoService.save(producto);
-              }
+                producto.setStock(0);
+                productoParametro = productoService.save(producto);
+            } else {
+                productoParametro = item.getProducto();
+            }
+
+            movimiento(productoParametro, usuario, item.getCantidad(), "compra".toUpperCase());
+            updateExistencias(productoParametro, item.getCantidad(), "compra".toUpperCase());
             return true;
         } catch(DataAccessException | ParseException e) {
             e.printStackTrace();
