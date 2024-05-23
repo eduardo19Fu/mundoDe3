@@ -51,14 +51,23 @@
                 <tr *ngFor="let movimiento of movimientosProducto">
                     <td>{{movimiento.idMovimiento}}</td>
                     <td>{{movimiento.fechaMovimiento | date: 'dd/MM/yyyy - HH:mm'}}</td>
-                    <td>
+                    <td >
                         <span class="badge"
                             [ngClass]="{'badge-warning': movimiento.tipoMovimiento.tipoMovimiento === 'ENTRADA', 
                                         'badge-danger' : movimiento.tipoMovimiento.tipoMovimiento === 'SALIDA',
                                         'badge-dark':movimiento.tipoMovimiento.tipoMovimiento === 'ANULACION FACTURA', 
                                         'badge-info': movimiento.tipoMovimiento.tipoMovimiento === 'VENTA',
-                                        'badge-success': movimiento.tipoMovimiento.tipoMovimiento === 'COMPRA'}">
-                            {{movimiento.tipoMovimiento.tipoMovimiento}}
+                                        'badge-success': movimiento.tipoMovimiento.tipoMovimiento === 'COMPRA', 
+                                        'badge-danger':movimiento.tipoMovimiento.tipoMovimiento === 'ELIMINAR_COMPRA'}"
+
+                            [ngSwitch]="movimiento.tipoMovimiento.tipoMovimiento">
+
+                            <h8 *ngSwitchCase="'ENTRADA'">Entrada</h8>
+                            <h8 *ngSwitchCase="'SALIDA'">Salida</h8>
+                            <h8 *ngSwitchCase="'VENTA'">Venta</h8>
+                            <h8 *ngSwitchCase="'ANULACION FACTURA'">Factura Anulada</h8>
+                            <h8 *ngSwitchCase="'COMPRA'">Compra</h8>
+                            <h8 *ngSwitchCase="'ELIMINAR_COMPRA'">Compra Eliminada</h8>
                         </span>
                     </td>
                     <td>{{movimiento.producto.nombre}}</td>
