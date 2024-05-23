@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
         this.authService.guardarUsuario(response.access_token);
         this.authService.guardarToken(response.access_token);
 
-        window.location.href = '/sitio/home';
+        window.location.href = '/home';
       },
       error => {
         if (error.status === 400) {
