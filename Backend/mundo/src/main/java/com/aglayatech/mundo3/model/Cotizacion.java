@@ -2,6 +2,12 @@ package com.aglayatech.mundo3.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,14 +19,22 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
 @Entity
 @Table(name = "cotizaciones")
 public class Cotizacion implements Serializable {
+
+    private static final long serialVersionUID = 6645193183982576092L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,75 +67,4 @@ public class Cotizacion implements Serializable {
         this.fechaEmision = LocalDateTime.now();
     }
 
-    public Long getIdCotizacion() {
-        return idCotizacion;
-    }
-
-    public void setIdCotizacion(Long idCotizacion) {
-        this.idCotizacion = idCotizacion;
-    }
-
-    public BigDecimal getTotal() {
-        return total;
-    }
-
-    public void setTotal(BigDecimal total) {
-        this.total = total;
-    }
-
-    public LocalDateTime getFechaEmision() {
-        return fechaEmision;
-    }
-
-    public void setFechaEmision(LocalDateTime fechaEmision) {
-        this.fechaEmision = fechaEmision;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public Estado getEstado() {
-        return estado;
-    }
-
-    public void setEstado(Estado estado) {
-        this.estado = estado;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public List<DetalleCotizacion> getItemsProforma() {
-        return itemsProforma;
-    }
-
-    public void setItemsProforma(List<DetalleCotizacion> itemsProforma) {
-        this.itemsProforma = itemsProforma;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Cotizacion{");
-        sb.append("idCotizacion=").append(idCotizacion);
-        sb.append(", total=").append(total);
-        sb.append(", fechaEmision=").append(fechaEmision);
-        sb.append(", usuario=").append(usuario);
-        sb.append(", estado=").append(estado);
-        sb.append(", cliente=").append(cliente);
-        sb.append(", itemsProforma=").append(itemsProforma);
-        sb.append('}');
-        return sb.toString();
-    }
-
-    private static final long serialVersionUID = 1L;
 }
