@@ -1,8 +1,26 @@
 package com.aglayatech.mundo3.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -11,9 +29,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
 @Entity
 @Table(name = "envios")
 public class Envio implements Serializable {
+
+    private static final long serialVersionUID = 7553891315091377057L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +56,7 @@ public class Envio implements Serializable {
     @JoinColumn(name = "id_cliente")
     @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
     private Cliente cliente;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario")
     @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
@@ -51,118 +77,11 @@ public class Envio implements Serializable {
     @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
     private List<Estado> estados;
 
-    public Envio() {
-        this.estados = new ArrayList<>();
-    }
-
     @PrePersist
     private void prepersist() {
         this.fechaRegistro = LocalDateTime.now();
     }
 
-    public Integer getIdEnvio() {
-        return idEnvio;
-    }
-
-    public void setIdEnvio(Integer idEnvio) {
-        this.idEnvio = idEnvio;
-    }
-
-    public LocalDate getFechaPedido() {
-        return fechaPedido;
-    }
-
-    public void setFechaPedido(LocalDate fechaPedido) {
-        this.fechaPedido = fechaPedido;
-    }
-
-    public String getTelefonoReferencia() {
-        return telefonoReferencia;
-    }
-
-    public void setTelefonoReferencia(String telefonoReferencia) {
-        this.telefonoReferencia = telefonoReferencia;
-    }
-
-    public Double getTotalEnvio() {
-        return totalEnvio;
-    }
-
-    public void setTotalEnvio(Double totalEnvio) {
-        this.totalEnvio = totalEnvio;
-    }
-
-    public Double getAbono() {
-        return abono;
-    }
-
-    public void setAbono(Double abono) {
-        this.abono = abono;
-    }
-
-    public Double getSaldoPendiente() {
-        return saldoPendiente;
-    }
-
-    public void setSaldoPendiente(Double saldoPendiente) {
-        this.saldoPendiente = saldoPendiente;
-    }
-
-    public LocalDateTime getFechaRegistro() {
-        return fechaRegistro;
-    }
-
-    public void setFechaRegistro(LocalDateTime fechaRegistro) {
-        this.fechaRegistro = fechaRegistro;
-    }
-
-    public String getReferencia() {
-        return referencia;
-    }
-
-    public void setReferencia(String referencia) {
-        this.referencia = referencia;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public Factura getFactura() {
-        return factura;
-    }
-
-    public void setFactura(Factura factura) {
-        this.factura = factura;
-    }
-
-    public List<DetalleEnvio> getItemsEnvio() {
-        return itemsEnvio;
-    }
-
-    public void setItemsEnvio(List<DetalleEnvio> itemsEnvio) {
-        this.itemsEnvio = itemsEnvio;
-    }
-
-    public List<Estado> getEstados() {
-        return estados;
-    }
-
-    public void setEstados(List<Estado> estados) {
-        this.estados = estados;
-    }
 
     /**
      * Función que determina el tipo de estados a asignar cuando se crear un nuevo envío o se genera un movimiento
@@ -224,25 +143,4 @@ public class Envio implements Serializable {
         return newEstados;
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Envio{");
-        sb.append("idEnvio=").append(idEnvio);
-        sb.append(", fechaPedido=").append(fechaPedido);
-        sb.append(", telefonoReferencia='").append(telefonoReferencia).append('\'');
-        sb.append(", totalEnvio=").append(totalEnvio);
-        sb.append(", abono=").append(abono);
-        sb.append(", saldoPendiente=").append(saldoPendiente);
-        sb.append(", fechaRegistro=").append(fechaRegistro);
-        sb.append(", referencia='").append(referencia).append('\'');
-        sb.append(", cliente=").append(cliente);
-        sb.append(", usuario=").append(usuario);
-        sb.append(", itemsEnvio=").append(itemsEnvio);
-        sb.append(", estados=").append(estados);
-        sb.append(", factura=").append(factura);
-        sb.append('}');
-        return sb.toString();
-    }
-
-    private final static long serialVersionUID = 1L;
 }

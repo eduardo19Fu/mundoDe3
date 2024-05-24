@@ -2,12 +2,26 @@ package com.aglayatech.mundo3.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.*;
+import lombok.Data;
+import lombok.ToString;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.io.Serializable;
 
+@Data
+@ToString
 @Entity
 @Table(name = "detalle_compra")
 public class DetalleCompra implements Serializable {
+
+    private static final long serialVersionUID = 5883802546596696920L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,57 +34,4 @@ public class DetalleCompra implements Serializable {
     @JoinColumn(name = "id_producto")
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private Producto producto;
-
-    public Integer getIdDetalleCompra() {
-        return idDetalleCompra;
-    }
-
-    public void setIdDetalleCompra(Integer idDetalleCompra) {
-        this.idDetalleCompra = idDetalleCompra;
-    }
-
-    public int getCantidad() {
-        return cantidad;
-    }
-
-    public void setCantidad(int cantidad) {
-        this.cantidad = cantidad;
-    }
-
-    public double getPrecioUnitario() {
-        return precioUnitario;
-    }
-
-    public void setPrecioUnitario(double precioUnitario) {
-        this.precioUnitario = precioUnitario;
-    }
-
-    public Double getSubTotal() {
-        return subTotal;
-    }
-
-    public void setSubTotal(Double subTotal) {
-        this.subTotal = subTotal;
-    }
-
-    public Producto getProducto() {
-        return producto;
-    }
-
-    public void setProducto(Producto producto) {
-        this.producto = producto;
-    }
-
-    @Override
-    public String toString() {
-        return "DetalleCompra{" +
-                "idDetalleCompra=" + idDetalleCompra +
-                ", cantidad=" + cantidad +
-                ", precioUnitario=" + precioUnitario +
-                ", subTotal=" + subTotal +
-                ", producto=" + producto +
-                '}';
-    }
-
-    private static final long serialVersionUID = 1L;
 }

@@ -1,6 +1,11 @@
 package com.aglayatech.mundo3.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,15 +18,23 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
 @Entity
 @Table(name = "pedidos")
 public class Pedido implements Serializable {
+
+    private static final long serialVersionUID = 3197567173647532850L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,85 +67,4 @@ public class Pedido implements Serializable {
     public void prepersist() {
         this.fechaRegistro = LocalDateTime.now();
     }
-
-    public Long getIdPedido() {
-        return idPedido;
-    }
-
-    public void setIdPedido(Long idPedido) {
-        this.idPedido = idPedido;
-    }
-
-    public BigDecimal getTotalPedido() {
-        return totalPedido;
-    }
-
-    public void setTotalPedido(BigDecimal totalPedido) {
-        this.totalPedido = totalPedido;
-    }
-
-    public LocalDateTime getFechaRegistro() {
-        return fechaRegistro;
-    }
-
-    public void setFechaRegistro(LocalDateTime fechaRegistro) {
-        this.fechaRegistro = fechaRegistro;
-    }
-
-    public LocalDate getFechaPedido() {
-        return fechaPedido;
-    }
-
-    public void setFechaPedido(LocalDate fechaPedido) {
-        this.fechaPedido = fechaPedido;
-    }
-
-    public Estado getEstado() {
-        return estado;
-    }
-
-    public void setEstado(Estado estado) {
-        this.estado = estado;
-    }
-
-    public Proveedor getProveedor() {
-        return proveedor;
-    }
-
-    public void setProveedor(Proveedor proveedor) {
-        this.proveedor = proveedor;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public List<DetallePedido> getItemsPedido() {
-        return itemsPedido;
-    }
-
-    public void setItemsPedido(List<DetallePedido> itemsPedido) {
-        this.itemsPedido = itemsPedido;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Pedido{");
-        sb.append("idPedido=").append(idPedido);
-        sb.append(", totalPedido=").append(totalPedido);
-        sb.append(", fechaRegistro=").append(fechaRegistro);
-        sb.append(", fechaPedido=").append(fechaPedido);
-        sb.append(", estado=").append(estado);
-        sb.append(", proveedor=").append(proveedor);
-        sb.append(", usuario=").append(usuario);
-        sb.append(", itemsPedido=").append(itemsPedido);
-        sb.append('}');
-        return sb.toString();
-    }
-
-    private static final long serialVersionUID = 1L;
 }
