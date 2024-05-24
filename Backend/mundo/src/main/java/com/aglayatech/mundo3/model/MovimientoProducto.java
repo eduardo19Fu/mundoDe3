@@ -3,6 +3,13 @@ package com.aglayatech.mundo3.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -15,11 +22,16 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
 @Entity
 @Table(name = "movimientos_producto")
 public class MovimientoProducto implements Serializable {
+
+	private static final long serialVersionUID = -5640566713525007234L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,62 +61,6 @@ public class MovimientoProducto implements Serializable {
 	public void configFecha() {
 		this.fechaMovimiento = new Date();
 	}
-
-	public Long getIdMovimiento() {
-		return idMovimiento;
-	}
-
-	public void setIdMovimiento(Long idMovimiento) {
-		this.idMovimiento = idMovimiento;
-	}
-
-	public TipoMovimiento getTipoMovimiento() {
-		return tipoMovimiento;
-	}
-
-	public void setTipoMovimiento(TipoMovimiento tipoMovimiento) {
-		this.tipoMovimiento = tipoMovimiento;
-	}
-
-	public Integer getCantidad() {
-		return cantidad;
-	}
-
-	public void setCantidad(Integer cantidad) {
-		this.cantidad = cantidad;
-	}
-
-	public Date getFechaMovimiento() {
-		return fechaMovimiento;
-	}
-
-	public void setFechaMovimiento(Date fechaMovimiento) {
-		this.fechaMovimiento = fechaMovimiento;
-	}
-
-	public Producto getProducto() {
-		return producto;
-	}
-
-	public void setProducto(Producto producto) {
-		this.producto = producto;
-	}
-
-	public Usuario getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
-
-	public Integer getStockInicial() {
-		return stockInicial;
-	}
-
-	public void setStockInicial(Integer stockInicial) {
-		this.stockInicial = stockInicial;
-	}
 	
 	public void calcularStock() {
 		if(this.getTipoMovimiento().getTipoMovimiento().equals("ENTRADA") || this.getTipoMovimiento().getTipoMovimiento().equals("ANULACION FACTURA")
@@ -122,7 +78,5 @@ public class MovimientoProducto implements Serializable {
 			this.producto.setStock((tempStock - this.getCantidad()));
 		}
 	}
-
-	private static final long serialVersionUID = 1L;
 
 }

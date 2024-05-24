@@ -1,13 +1,32 @@
 package com.aglayatech.mundo3.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.io.Serializable;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
 @Entity
 @Table(name = "certificadores")
 public class Certificador implements Serializable {
+
+    private static final long serialVersionUID = 1836583438171174700L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,62 +43,4 @@ public class Certificador implements Serializable {
     @JoinColumn(name = "id_estado")
     @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
     private Estado estado;
-
-    public Integer getIdCertificador() {
-        return idCertificador;
-    }
-
-    public void setIdCertificador(Integer idCertificador) {
-        this.idCertificador = idCertificador;
-    }
-
-    public String getAliasWs() {
-        return aliasWs;
-    }
-
-    public void setAliasWs(String aliasWs) {
-        this.aliasWs = aliasWs;
-    }
-
-    public String getLlaveWs() {
-        return llaveWs;
-    }
-
-    public void setLlaveWs(String llaveWs) {
-        this.llaveWs = llaveWs;
-    }
-
-    public String getTokenSigner() {
-        return tokenSigner;
-    }
-
-    public void setTokenSigner(String tokenSigner) {
-        this.tokenSigner = tokenSigner;
-    }
-
-    public String getPrefijo() {
-        return prefijo;
-    }
-
-    public void setPrefijo(String prefijo) {
-        this.prefijo = prefijo;
-    }
-
-    public String getCorreoCopia() {
-        return correoCopia;
-    }
-
-    public void setCorreoCopia(String correoCopia) {
-        this.correoCopia = correoCopia;
-    }
-
-    public Estado getEstado() {
-        return estado;
-    }
-
-    public void setEstado(Estado estado) {
-        this.estado = estado;
-    }
-
-    private static final long serialVersionUID = 1L;
 }
