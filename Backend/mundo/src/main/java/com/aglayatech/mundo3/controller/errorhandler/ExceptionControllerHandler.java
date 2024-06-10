@@ -25,7 +25,7 @@ public class ExceptionControllerHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {NoContentException.class})
     public ResponseEntity<ErrorDTO> noContentExceptionHandler(RuntimeException exception) {
-        log.error("There is no content available", exception);
+        log.error("There is no content available");
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setMessage(exception.getMessage());
         errorDTO.setCause(exception.getCause());
