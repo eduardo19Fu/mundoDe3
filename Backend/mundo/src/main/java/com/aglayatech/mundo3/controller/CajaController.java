@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/cajas")
@@ -56,10 +58,30 @@ public class CajaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(cajaService.guardar(caja));
     }
 
+    @PostMapping("/v2/post")
+    public ResponseEntity<Map<String, Object>> crearV2(@RequestBody Caja caja) {
+        log.info("*********** Aperturando nueva caja Version 2 **************");
+
+        Caja newCaja = cajaService.guardar(caja);
+        Map<String, Object> response = new HashMap<>();
+
+        if(newCaja != null) {
+            response.put("code", "30001");
+            response.put("mensaje", "La caja ha sido aperturada exitosamente");
+            response.put("caja", newCaja);
+        }
+         else {
+             response.put("code", "30002");
+             response.put("mensaje", "Usuario ".concat(caja.getUsuario().getUsuario().concat(" ya cuenta con una caja aperturada")));
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
     @PutMapping("/put")
     public ResponseEntity<Caja> actualizar(@RequestBody Caja caja) {
-        log.info("*********** Aperturando nueva caja **************");
-        return ResponseEntity.ok(cajaService.guardar(caja));
+        // TODO: Queda pendiente la implementación de actualización de caja ya que no es necesario su implementación en esta versión
+        return null;
     }
 
     @DeleteMapping("/{id}/delete")

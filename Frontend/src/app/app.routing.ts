@@ -36,6 +36,8 @@ import { PedidosComponent } from './components/pedidos/pedidos.component';
 import { CreatePedidoComponent } from './components/pedidos/create-pedido/create-pedido.component';
 import { CotizacionesComponent } from './components/cotizaciones/cotizaciones.component';
 import { CreateCotizacionComponent } from './components/cotizaciones/create-cotizacion/create-cotizacion.component';
+import { CajasComponent } from './components/cajas/cajas.component';
+import { CreateCajaComponent } from './components/cajas/create-caja/create-caja.component';
 
 const appRoutes: Routes = [
     {path: '', component: LoginComponent},
@@ -55,6 +57,11 @@ const appRoutes: Routes = [
     {path: 'productos/inventario/index', component: MovimientosProductoComponent, canActivate: [AuthGuard, RoleGuard], data: {role: ['ROLE_ADMIN', 'ROLE_INVENTARIO']}},
     {path: 'productos/inventario/create', component: CreateMovimientoComponent, canActivate: [AuthGuard, RoleGuard], data: {role: ['ROLE_ADMIN', 'ROLE_INVENTARIO']}},
 
+    /****** MENUS DE CAJAS ******/
+    {path: 'cajas/index', component: CajasComponent, canActivate: [AuthGuard, RoleGuard], data: {role: ['ROLE_ADMIN', 'ROLE_COBRADOR']}},
+    {path: 'cajas/create', component: CreateCajaComponent, canActivate: [AuthGuard, RoleGuard], data: {role: ['ROLE_ADMIN', 'ROLE_COBRADOR']}},
+    {path: 'cajas/create/:id', component: CreateCajaComponent, canActivate: [AuthGuard, RoleGuard], data: {role: ['ROLE_ADMIN', 'ROLE_COBRADOR']}},
+    
     /****** MENUS DE COTIZACIONES ******/
     {path: 'cotizaciones/index', component: CotizacionesComponent, canActivate: [AuthGuard, RoleGuard], data: {role: ['ROLE_ADMIN', 'ROLE_COBRADOR']}},
     {path: 'cotizaciones/create', component: CreateCotizacionComponent, canActivate: [AuthGuard, RoleGuard], data: {role: ['ROLE_ADMIN', 'ROLE_COBRADOR']}},

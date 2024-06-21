@@ -1,6 +1,7 @@
 package com.aglayatech.mundo3.service.impl;
 
 import com.aglayatech.mundo3.error.exceptions.NotFoundException;
+import com.aglayatech.mundo3.model.Usuario;
 import com.aglayatech.mundo3.model.enums.EstadoCajaEnum;
 import org.springframework.dao.DataAccessException;
 import com.aglayatech.mundo3.error.exceptions.NoContentException;
@@ -110,11 +111,16 @@ public class CajaServiceImpl implements ICajaService {
 
         try {
             if(caja.getIdCaja() == null) {
-                log.info("Registrando nueva caja: {}", caja);
-                caja.setEstado(EstadoCajaEnum.APERTURADA);
-                caja.setMontoActual(caja.getMontoApertura());
-                caja.setFechaApertura(LocalDateTime.now());
-                cajaSaved = cajaRepository.save(caja);
+                if(!comprobarCajaAperturada(caja.getUsuario(), EstadoCajaEnum.APERTURADA)) {
+                    log.info("Registrando nueva caja: {}", caja);
+                    caja.setEstado(EstadoCajaEnum.APERTURADA);
+                    caja.setMontoActual(caja.getMontoApertura());
+                    caja.setFechaApertura(LocalDateTime.now());
+                    cajaSaved = cajaRepository.save(caja);
+                } else {
+                    log.warn("Usuario {}, ya posee una caja aperturada", caja.getUsuario().getUsuario());
+                    return null;
+                }
             } else {
                 log.info("Actualizando caja: {}", caja);
                 cajaSaved = cajaRepository.save(caja);
@@ -151,5 +157,9 @@ public class CajaServiceImpl implements ICajaService {
         } finally {
             log.debug("{} Exit", __method);
         }
+    }
+
+    private boolean comprobarCajaAperturada(Usuario usuario, EstadoCajaEnum estado) {
+        return cajaRepository.findByUsuario(usuario, estado).isPresent();
     }
 }
