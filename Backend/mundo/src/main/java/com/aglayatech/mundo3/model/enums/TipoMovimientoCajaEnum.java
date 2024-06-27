@@ -5,5 +5,6 @@ public enum TipoMovimientoCajaEnum {
     DEVOLUCION,
     PRESTAMO,
     GASTO,
-    PAGO_PROVEEDOR
+    PAGO_PROVEEDOR,
+    CAMBIO;
 }

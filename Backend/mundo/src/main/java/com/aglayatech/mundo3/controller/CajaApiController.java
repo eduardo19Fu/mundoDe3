@@ -28,7 +28,7 @@ import java.util.Map;
 @RequestMapping("/api/cajas")
 @RequiredArgsConstructor
 @Slf4j
-public class CajaController {
+public class CajaApiController {
 
     private final ICajaService cajaService;
 
