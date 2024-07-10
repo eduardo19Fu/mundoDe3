@@ -47,6 +47,7 @@ export class CreateMovimientoComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    (document.getElementById('cod-producto') as HTMLInputElement).focus();
     this.usuarioService.getUsuario(this.authService.usuario.idUsuario).subscribe(
       usuario => {
         this.usuario = usuario;

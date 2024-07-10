@@ -33,14 +33,12 @@
                 <tr>
                     <!-- <th>#</th> -->
                     <th>Codigo</th>
-                    <th>Serie</th>
+                    <!-- <th>Serie</th> -->
                     <th>Nombre</th>
-                    <th>Precio</th>
-                    <th>Precio Sugerido</th>
+                    <th>Precio Venta</th>
+                    <th>Precio Compra</th>
                     <th>Stock</th>
                     <th>Proveedor</th>
-                    <th>Tipo</th>
-                    <th>Marca</th>
                     <th>Estado</th>
                     <th>Opciones</th>
                 </tr>
@@ -52,14 +50,12 @@
                         
                     </td> -->
                     <td>{{producto.codProducto}}</td>
-                    <td>{{producto.serie}}</td>
+                    <!-- <td>{{producto.serie}}</td> -->
                     <td>{{producto.nombre}}</td>
                     <td>{{producto.precioVenta | currency: "Q" : "symbol"}}</td>
-                    <td>{{ (producto.precioSugerido ? producto.precioSugerido : 0) | currency: "Q" : "symbol" }}</td>
+                    <td>{{ producto.precioCompra | currency: "Q" : "symbol" }}</td>
                     <td>{{producto.stock}}</td>
                     <td>{{producto.proveedor ? producto.proveedor.nombre : ''}}</td>
-                    <td>{{producto.tipoProducto ? producto.tipoProducto.tipoProducto : ''}}</td>
-                    <td>{{producto.marcaProducto ? producto.marcaProducto.marca : ''}}</td>
                     <td>
                         <span class="badge"
                             [ngClass]="{'badge-primary': producto.estado.estado === 'ACTIVO', 'badge-danger': producto.estado.estado === 'INACTIVO'}">
@@ -90,14 +86,12 @@
                 <tr>
                     <!-- <th>#</th> -->
                     <th>Codigo</th>
-                    <th>Serie</th>
+                    <!-- <th>Serie</th> -->
                     <th>Nombre</th>
-                    <th>Precio</th>
                     <th>Precio Venta</th>
+                    <th>Precio Compra</th>
                     <th>Stock</th>
                     <th>Proveedor</th>
-                    <th>Tipo</th>
-                    <th>Marca</th>
                     <th>Estado</th>
                     <th>Opciones</th>
                 </tr>

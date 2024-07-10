@@ -69,6 +69,7 @@ export class CreateFacturaComponent implements OnInit {
   ngOnInit(): void {
     this.loadUsuario();
     this.loadEnvio();
+    this.loadClientePorDefecto();
   }
 
   loadUsuario(): void {
@@ -76,19 +77,21 @@ export class CreateFacturaComponent implements OnInit {
       usuario => {
         this.usuario = usuario;
         this.cargarCorrelativo();
+        (document.getElementById("codigo") as HTMLInputElement).focus();
       }
     );
   }
 
   buscarCliente(): void {
     // const nit = ((document.getElementById('buscar') as HTMLInputElement)).value;
-    const nit = this.myBuscarTexto.nativeElement.value;
+    // const nit = this.myBuscarTexto.nativeElement.value;
+    const nit = this.cliente.nit;
 
     if (nit) {
       this.clienteService.getClienteByNit(nit).subscribe(
         cliente => {
           this.cliente = cliente;
-          (document.getElementById('serie')).focus();
+          (document.getElementById('codigo')).focus();
         },
         error => {
           if (error.status === 400) {
@@ -122,7 +125,8 @@ export class CreateFacturaComponent implements OnInit {
     }
   }
 
-  buscarProducto(): void {
+  // Versión para buscar por serie ya no utilizada
+  /* buscarProducto(): void {
     const serie = ((document.getElementById('serie') as HTMLInputElement)).value;
 
     if (serie) {
@@ -142,12 +146,40 @@ export class CreateFacturaComponent implements OnInit {
         }
       );
     }
+  } */
+
+  buscarProducto(): void {
+    const codigo = ((document.getElementById('codigo') as HTMLInputElement)).value;
+
+    if (codigo) {
+      this.productoService.getProductoByCode(codigo).subscribe(
+        producto => {
+          this.producto = producto;
+          // (document.getElementById('cantidad') as HTMLInputElement).focus();
+          // (document.getElementById('cantidad') as HTMLInputElement).value = '';
+          this.agregarLinea();
+        },
+        error => {
+          if (error.status === 400) {
+            swal.fire(`Error: ${error.status}`, 'Petición no se puede llevar a cabo.', 'error');
+          }
+
+          if (error.status === 404) {
+            swal.fire(`Error: ${error.status}`, error.error.mensaje, 'error');
+          }
+        }
+      );
+    } else {
+      swal.fire('Código Inválido', 'Ingrese un código de producto válido para realizar la búsqueda.', 'warning');
+    }
   }
 
   buscarProductoPorId(id: number): void {
     this.productoService.getProducto(id).subscribe(
       producto => {
-        this.producto = producto;(document.getElementById('cantidad') as HTMLInputElement).focus();
+        this.producto = producto;
+        // (document.getElementById('cantidad') as HTMLInputElement).focus();
+        this.agregarLinea();
       },
       error => {
         if (error.status === 400) {
@@ -164,10 +196,8 @@ export class CreateFacturaComponent implements OnInit {
   buscarProductoPorCodigo(codigo: string): void {
     this.productoService.getProductoByCode(codigo).subscribe(
       producto => {
-        console.log(producto);
         this.producto = producto;
-        console.log(this.producto);
-        (document.getElementById('cantidad') as HTMLInputElement).focus();
+        // (document.getElementById('cantidad') as HTMLInputElement).focus();
       }, error => {
         if (error.status === 400) {
           swal.fire(`Error: ${error.status}`, 'Petición no se puede llevar a cabo.', 'error');
@@ -187,7 +217,8 @@ export class CreateFacturaComponent implements OnInit {
       if (this.producto) { // comprueba que el producto exista
         const item = new DetalleFactura();
 
-        item.cantidad = +((document.getElementById('cantidad') as HTMLInputElement)).value; // valor obtenido del formulario de cantidad
+        // item.cantidad = +((document.getElementById('cantidad') as HTMLInputElement)).value; // valor obtenido del formulario de cantidad
+        item.cantidad = 1;
         item.descuento = 0; // valor obtenido del input de descuento
 
         if (item.cantidad > this.producto.stock) {
@@ -198,7 +229,9 @@ export class CreateFacturaComponent implements OnInit {
             if (this.existeItem(this.producto.idProducto)) {
               this.incrementaCantidad(this.producto.idProducto, item.cantidad);
               this.producto = new Producto();
-              (document.getElementById('cantidad') as HTMLInputElement).value = '';
+              // (document.getElementById('cantidad') as HTMLInputElement).value = '';
+              (document.getElementById('codigo') as HTMLInputElement).focus();
+              (document.getElementById('codigo') as HTMLInputElement).value = '';
             } else {
               item.producto = this.producto;
               item.subTotalDescuento = item.calcularImporte();
@@ -206,7 +239,9 @@ export class CreateFacturaComponent implements OnInit {
               this.factura.itemsFactura.push(item);
               this.producto = new Producto();
 
-              (document.getElementById('cantidad') as HTMLInputElement).value = '';
+              // (document.getElementById('cantidad') as HTMLInputElement).value = '';
+              (document.getElementById('codigo') as HTMLInputElement).focus();
+              (document.getElementById('codigo') as HTMLInputElement).value = '';
             }
 
           } else if (item.cantidad === 0) {
@@ -299,9 +334,9 @@ export class CreateFacturaComponent implements OnInit {
         this.cliente = new Cliente();
         this.factura = new Factura();
         this.cargarCorrelativo();
-        this.myBuscarTexto.nativeElement.value = '';
+        // this.myBuscarTexto.nativeElement.value = '';
         swal.fire('Venta Realizada', `Factura No. ${response.factura.noFactura} creada con éxito!`, 'success');
-        this.myBuscarTexto.nativeElement.focus();
+        // this.myBuscarTexto.nativeElement.focus();
         this.cambio = 0;
         this.myEfectivoRef.nativeElement.value = '';
 
@@ -344,11 +379,11 @@ export class CreateFacturaComponent implements OnInit {
   }
 
   loadProducto(event): void {
-    console.log(event);
-    (document.getElementById('serie') as HTMLInputElement).value = event.serie;
+    (document.getElementById('codigo') as HTMLInputElement).value = event.codigo;
     this.buscarProductoPorId(event.idProducto);
     (document.getElementById('button-x')).click();
-    (document.getElementById('cantidad') as HTMLInputElement).focus();
+    // (document.getElementById('cantidad') as HTMLInputElement).focus();
+    // (document.getElementById('cantidad') as HTMLInputElement).value = '';
   }
 
   loadCliente(event): void {
@@ -403,4 +438,11 @@ export class CreateFacturaComponent implements OnInit {
     });
   }
 
+  loadClientePorDefecto(): void {
+    this.clienteService.getClienteByNit('CF').subscribe(
+      response => {
+        this.cliente = response;
+      }
+    );
+  }
 }

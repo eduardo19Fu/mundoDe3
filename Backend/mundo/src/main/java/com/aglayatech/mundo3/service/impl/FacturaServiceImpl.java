@@ -111,7 +111,7 @@ public class FacturaServiceImpl implements IFacturaService {
 		Connection con = localDataSource.getConnection();
 		Map<String, Object> params = new HashMap<>();
 		params.put("idfactura", idfactura);
-		InputStream file = getClass().getResourceAsStream("/reports/factura.jrxml");
+		InputStream file = getClass().getResourceAsStream("/reports/comprobante-venta.jrxml");
 
 		JasperReport jasperReport = JasperCompileManager.compileReport(file);
 		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, con);

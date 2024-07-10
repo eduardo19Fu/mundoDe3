@@ -133,7 +133,7 @@ export class CreateCompraComponent implements OnInit, OnDestroy {
           // Para evitar error al ejecutar funcion producto.calcularPrecioSugerido()
           this.producto.idProducto = producto.idProducto;
           this.producto.codProducto = producto.codProducto;
-          this.producto.serie = producto.serie;
+          // this.producto.serie = producto.serie;
           this.producto.nombre = producto.nombre;
           this.producto.precioCompra = producto.precioCompra;
           this.producto.precioVenta = producto.precioVenta;
@@ -197,9 +197,9 @@ export class CreateCompraComponent implements OnInit, OnDestroy {
           this.producto.codProducto = 'GENERADO-' + this.producto.generarCodigo();
         }
 
-        if (!this.producto.serie || this.producto.serie.length === 0) {
-          this.producto.serie = 'GENERADO-SERIE-' + this.generarCodigo();
-        }
+        // if (!this.producto.serie || this.producto.serie.length === 0) {
+        //   this.producto.serie = 'GENERADO-SERIE-' + this.generarCodigo();
+        // }
 
         this.producto.precioSugerido = +(document.getElementById('precio-sugerido') as HTMLInputElement).value;
         this.producto.precioVenta = +(document.getElementById('precio-venta') as HTMLInputElement).value;

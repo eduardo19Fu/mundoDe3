@@ -68,12 +68,16 @@ order by p.nombre asc]]>
 				</graphicElement>
 			</rectangle>
 			<staticText>
-				<reportElement x="0" y="19" width="571" height="39" uuid="059e714e-15d9-4bef-a236-e7361c3b4001"/>
+				<reportElement x="110" y="19" width="430" height="39" uuid="059e714e-15d9-4bef-a236-e7361c3b4001"/>
 				<textElement textAlignment="Center">
 					<font size="19" isBold="true"/>
 				</textElement>
-				<text><![CDATA[POLIZA DE INGRESO POR VENDEDOR]]></text>
+				<text><![CDATA[POLIZA DE INGRESOS POR VENDEDOR]]></text>
 			</staticText>
+			<image>
+				<reportElement x="15" y="0" width="95" height="72" uuid="240ec96f-b121-464f-81a3-19545529e083"/>
+				<imageExpression><![CDATA[this.getClass().getResourceAsStream("/static/images/reports-image/kairos-logo.png")]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>

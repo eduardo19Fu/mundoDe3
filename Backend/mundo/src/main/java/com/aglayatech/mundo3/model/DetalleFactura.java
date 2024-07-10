@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Data
 @ToString
@@ -28,9 +29,9 @@ public class DetalleFactura implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idDetalle;
 	private Integer cantidad;
-	private Double subTotal;
-	private Double descuento;
-	private Double subTotalDescuento;
+	private BigDecimal subTotal;
+	private BigDecimal descuento;
+	private BigDecimal subTotalDescuento;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_producto")
