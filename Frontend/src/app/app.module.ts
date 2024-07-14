@@ -67,6 +67,10 @@ import { CreateCotizacionComponent } from './components/cotizaciones/create-coti
 import { ModalCotizacionDetalleComponent } from './components/cotizaciones/modal-cotizacion-detalle/modal-cotizacion-detalle.component';
 import { CajasComponent } from './components/cajas/cajas.component';
 import { CreateCajaComponent } from './components/cajas/create-caja/create-caja.component';
+import { MovimientosCajaComponent } from './components/movimientos-caja/movimientos-caja.component';
+import { CrearMovimientoCajaComponent } from './components/movimientos-caja/crear-movimiento-caja/crear-movimiento-caja.component';
+import { ModalUpdateMontoCajaComponent } from './components/cajas/modal-update-monto-caja/modal-update-monto-caja.component';
+import { ModalCrearMovimientoCajaComponent } from './components/cajas/modal-crear-movimiento-caja/modal-crear-movimiento-caja.component';
 
 @NgModule({
   declarations: [
@@ -128,7 +132,11 @@ import { CreateCajaComponent } from './components/cajas/create-caja/create-caja.
     CreateCotizacionComponent,
     ModalCotizacionDetalleComponent,
     CajasComponent,
-    CreateCajaComponent
+    CreateCajaComponent,
+    MovimientosCajaComponent,
+    CrearMovimientoCajaComponent,
+    ModalUpdateMontoCajaComponent,
+    ModalCrearMovimientoCajaComponent
   ],
   imports: [
     BrowserModule,

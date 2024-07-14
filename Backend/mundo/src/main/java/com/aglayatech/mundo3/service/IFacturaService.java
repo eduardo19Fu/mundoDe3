@@ -1,6 +1,7 @@
 package com.aglayatech.mundo3.service;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Date;
@@ -32,7 +33,7 @@ public interface IFacturaService {
 	
 	public byte[] resportDailySales(Integer usuario, Date fecha) throws JRException, FileNotFoundException, SQLException;
 	
-	public byte[] showBill(Long idfactura) throws JRException, FileNotFoundException, SQLException;
+	public byte[] showBill(Long idfactura) throws JRException, IOException, SQLException;
 
 	public byte[] showBill2(Long idfactura) throws JRException, FileNotFoundException, SQLException;
 

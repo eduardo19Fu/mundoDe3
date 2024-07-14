@@ -1,0 +1,6 @@
+CREATE PROCEDURE `PR_CONSULTAR_FACTURAS_POR_CAJERO`(IN idCajero INT)
+BEGIN
+    SELECT *
+    FROM facturas
+    WHERE id_usuario = idCajero;
+END

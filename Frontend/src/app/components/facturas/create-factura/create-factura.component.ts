@@ -331,9 +331,10 @@ export class CreateFacturaComponent implements OnInit {
 
     this.facturaService.create(this.factura).subscribe(
       response => {
-        this.cliente = new Cliente();
+        // this.cliente = new Cliente();
         this.factura = new Factura();
         this.cargarCorrelativo();
+        (document.getElementById('codigo') as HTMLInputElement).focus();
         // this.myBuscarTexto.nativeElement.value = '';
         swal.fire('Venta Realizada', `Factura No. ${response.factura.noFactura} creada con éxito!`, 'success');
         // this.myBuscarTexto.nativeElement.focus();
