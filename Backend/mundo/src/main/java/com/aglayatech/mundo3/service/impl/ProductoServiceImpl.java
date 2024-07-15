@@ -18,9 +18,9 @@ import javax.sql.DataSource;
 
 import com.aglayatech.mundo3.model.DetalleCompra;
 import com.aglayatech.mundo3.service.IEstadoService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.aglayatech.mundo3.service.IMovimientoProductoService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,18 +42,14 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class ProductoServiceImpl implements IProductoService {
 
-	private final static Logger LOGGER = LoggerFactory.getLogger(ProductoServiceImpl.class);
-
-	@Autowired
-	private IProductoRepository repoProducto;
-
-	@Autowired
-	private IEstadoService estadoService;
-	
-	@Autowired
-	protected DataSource localDataSource;
+	private final IProductoRepository repoProducto;
+	private final IEstadoService estadoService;
+	// private final IMovimientoProductoService movimientoProductoService;
+	protected final DataSource localDataSource;
 
 	@Override
 	public List<Producto> findAll() {
@@ -151,7 +147,7 @@ public class ProductoServiceImpl implements IProductoService {
 			save(producto);
 			return true;
 		} catch(DataAccessException | ParseException e) {
-			LOGGER.error(e.getMessage());
+			log.error(e.getMessage());
 			return false;
 		}
 	}
@@ -181,7 +177,7 @@ public class ProductoServiceImpl implements IProductoService {
 				producto.setStock(producto.getStock() - cantidad);
 				break;
 			default:
-				LOGGER.error("No existe una operación asignada para el tipo de movimiento ".concat(tipoMovimiento));
+				log.error("No existe una operación asignada para el tipo de movimiento ".concat(tipoMovimiento));
 				break;
 		}
 		productoUpdated = save(producto);
@@ -215,7 +211,7 @@ public class ProductoServiceImpl implements IProductoService {
 
 		parametroFecha = format.parse(fecha);
 		params.put("pFecha", parametroFecha);
-		LOGGER.info("Parámetro fecha mapeado: {}", params.get("pFecha").toString());
+		log.info("Parámetro fecha mapeado: {}", params.get("pFecha").toString());
 		InputStream file = getClass().getResourceAsStream("/reports/rpt_inventario.jrxml");
 
 		JasperReport jasperReport = JasperCompileManager.compileReport(file);

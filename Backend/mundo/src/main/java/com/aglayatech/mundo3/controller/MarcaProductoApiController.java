@@ -79,16 +79,6 @@ public class MarcaProductoApiController {
 
 		// manejador de errores desde el backend
 		if (result.hasErrors()) {
-
-			/* Primera forma:
-			 * 
-			 * List<String> errors = new ArrayList<>();
-			 * 
-			 * for(FieldError err : result.getFieldErrors()) {
-			 * errors.add("El campo '".concat(err.getField().concat("' ")).concat(err.
-			 * getDefaultMessage())); }
-			 */
-
 			List<String> errors = result.getFieldErrors().stream()
 					.map(err -> "El campo '".concat(err.getField().concat("' ")).concat(err.getDefaultMessage()))
 					.collect(Collectors.toList());

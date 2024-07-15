@@ -58,7 +58,10 @@
                     <td>{{producto.proveedor ? producto.proveedor.nombre : ''}}</td>
                     <td>
                         <span class="badge"
-                            [ngClass]="{'badge-primary': producto.estado.estado === 'ACTIVO', 'badge-danger': producto.estado.estado === 'INACTIVO'}">
+                            [ngClass]="{'badge-primary': producto.estado.estado === 'ACTIVO', 
+                                        'badge-dark': producto.estado.estado === 'INACTIVO',
+                                        'badge-warning': producto.estado.estado === 'POR AGOTARSE',
+                                        'badge-danger': producto.estado.estado === 'AGOTADO'}">
                             {{producto.estado.estado}}
                         </span>
                     </td>

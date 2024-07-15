@@ -218,7 +218,7 @@ public class EnvioApiController {
             movimiento.setProducto(producto);
             movimiento.setStockInicial(producto.getStock());
             movimiento.setCantidad(cantidad);
-            movimiento.calcularStock();
+            // movimiento.calcularStock();
 
             movimientoProductoService.save(movimiento);
         } catch (DataAccessException e) {
