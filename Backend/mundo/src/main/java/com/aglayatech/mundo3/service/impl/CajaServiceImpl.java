@@ -76,6 +76,28 @@ public class CajaServiceImpl implements ICajaService {
         }
     }
 
+    /**
+     * @param idusuario
+     * @param estado
+     * @return
+     */
+    @Override
+    public Caja getCajaByIdUsuario(Integer idusuario, String estado) {
+        String __method = new Object() {}.getClass().getEnclosingClass().getSimpleName() + "::" + new Object() {}.getClass().getEnclosingMethod().getName();
+        log.debug("Enter {}", __method);
+
+        try {
+            Optional<Caja> caja = cajaRepository.findCajaByUsuarioAndEstado(idusuario, estado);
+            log.info("Devolviendo caja para el usuario: {}", idusuario);
+            return caja.orElse(null);
+        } catch (DataAccessException e) {
+            log.error("Ha ocurrido un error a nivel de base de datos: {}", e.toString());
+            throw new com.aglayatech.mundo3.error.exceptions.DataAccessException(e.getMessage(), e.getCause());
+        } finally {
+            log.debug("{} Exit", __method);
+        }
+    }
+
     @Transactional(readOnly = true)
     @Override
     public Caja getCaja(Long idcaja) {

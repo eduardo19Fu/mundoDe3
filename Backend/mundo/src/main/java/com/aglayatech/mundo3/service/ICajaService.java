@@ -11,6 +11,8 @@ public interface ICajaService {
 
     public List<Caja> getCajas(LocalDate fechaIni, LocalDate fechaFin);
 
+    public Caja getCajaByIdUsuario(Integer idusuario, String estado);
+
     public Caja getCaja(Long idcaja);
 
     public Caja guardar(Caja caja);

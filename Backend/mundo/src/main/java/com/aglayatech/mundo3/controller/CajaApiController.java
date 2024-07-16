@@ -1,6 +1,7 @@
 package com.aglayatech.mundo3.controller;
 
 import com.aglayatech.mundo3.model.Caja;
+import com.aglayatech.mundo3.model.enums.EstadoCajaEnum;
 import com.aglayatech.mundo3.service.ICajaService;
 
 import lombok.RequiredArgsConstructor;
@@ -50,6 +51,12 @@ public class CajaApiController {
     public ResponseEntity<Caja> buscarCaja(@PathVariable Long id) {
         log.info("Obteniendo Caja con ID: {}", id);
         return ResponseEntity.ok(cajaService.getCaja(id));
+    }
+
+    @GetMapping("/caja-usuario/{idusuario}/get")
+    public ResponseEntity<Caja> buscarCajaPorUsuario(@PathVariable("idusuario") Integer idusuario) {
+        log.info("Buscando caja aperturada para el usuario: {}", idusuario);
+        return ResponseEntity.ok(cajaService.getCajaByIdUsuario(idusuario, EstadoCajaEnum.APERTURADA.toString()));
     }
 
     @PostMapping("/post")

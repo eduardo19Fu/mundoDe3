@@ -8,6 +8,7 @@ import com.aglayatech.mundo3.service.IMovimientoCajaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +16,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -42,7 +45,15 @@ public class MovimientoCajaApiController {
         return ResponseEntity.ok(movimientoCajaService.listarMovimientoCajas(caja));
     }
 
-    @GetMapping(value = "/movimiento/get/{id}")
+    @GetMapping(value = "/movimientos/filtro-fecha/get")
+    public ResponseEntity<List<MovimientoCaja>> listarMovimientos(@RequestParam("date1") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha1,
+                                                                  @RequestParam("date2") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha2)
+    {
+        log.info("Buscando listado de movimientos por rango de fechas");
+        return ResponseEntity.ok(movimientoCajaService.listarMovimientoCajas(fecha1, fecha2));
+    }
+
+    @GetMapping(value = "/movimiento/{id}/get")
     public ResponseEntity<MovimientoCaja> buscarMovimientoCaja(@PathVariable("id") Long id) {
         log.info("Buscando movimiento caja: {}", id);
         return ResponseEntity.ok(movimientoCajaService.buscarMovimiento(id));

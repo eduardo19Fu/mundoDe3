@@ -1,0 +1,64 @@
+.dropdown-buttons {
+    margin-right: 10px !important;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.table-container {
+    width: 50%;
+    margin: 0 auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td {
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+    text-align: left;
+}
+
+.color-box {
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+}
+
+.amount {
+    text-align: right;
+}
+
+.total {
+    font-weight: bold;
+}
+
+.income {
+    color: #28a745;
+}
+
+.expense {
+    color: #dc3545;
+}
+
+.balance {
+    color: #000000;
+}
+
+.initial-balance {
+    color: #17a2b8;
+}
+
+.total td {
+    border-bottom: none;
+}
+
+.total .amount {
+    font-weight: bold;
+}
