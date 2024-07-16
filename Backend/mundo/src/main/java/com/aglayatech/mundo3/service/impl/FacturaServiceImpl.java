@@ -126,11 +126,12 @@ public class FacturaServiceImpl implements IFacturaService {
 		String reportPath = reportProperties.getReportPath();
 		InputStream file = null;
 
-		if(reportPath == null || reportPath.isEmpty()) {
-			file = getClass().getResourceAsStream("/reports/comprobante-venta.jrxml");
-		} else {
-			file = Files.newInputStream(Paths.get(reportPath));
-		}
+		file = getClass().getResourceAsStream("/reports/comprobante-venta.jrxml");
+//		if(reportPath == null || reportPath.isEmpty()) {
+//			file = getClass().getResourceAsStream("/reports/comprobante-venta.jrxml");
+//		} else {
+//			file = Files.newInputStream(Paths.get(reportPath));
+//		}
 
 		JasperReport jasperReport = JasperCompileManager.compileReport(file);
 		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, con);
