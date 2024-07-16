@@ -3,9 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Caja } from '../../../models/caja';
 import { Usuario } from '../../../models/usuario';
+import { UsuarioAuxiliar } from '../../../models/auxiliar/usuario-auxiliar';
 
 import { CajaService } from '../../../services/cajas/caja.service';
 import { UsuarioService } from '../../../services/usuarios/usuario.service';
+import { AuthService } from '../../../services/auth.service';
 
 import Swal from 'sweetalert2';
 
@@ -20,21 +22,24 @@ export class CreateCajaComponent implements OnInit {
   title: string;
   
   caja: Caja;
+  usuario: UsuarioAuxiliar;
   usuarios: Usuario[];
 
   constructor(
     private cajaService: CajaService,
     private usuarioService: UsuarioService,
+    private authService: AuthService,
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
     this.title = 'Apertura de Caja';
     this.caja = new Caja();
+    this.usuario = new UsuarioAuxiliar();
     this. usuarios = [];
   }
 
   ngOnInit(): void {
-    this.loadUsuarios();
+    this.buscarUsuario();
   }
 
   create(): void {
@@ -49,6 +54,7 @@ export class CreateCajaComponent implements OnInit {
   }
 
   createV2(): void {
+    this.caja.usuario = this.usuario;
     this.cajaService.createV2(this.caja).subscribe(
       response => {
         if(response) {
@@ -63,12 +69,16 @@ export class CreateCajaComponent implements OnInit {
     );
   }
 
-  update(): void {
-    // TODO: Queda pendiente la implementación de la actualización ya que no es necesario para esta primera version
+  buscarUsuario(): void {
+    this.usuarioService.getUsuario(this.authService.usuario.idUsuario).subscribe(
+      response => {
+        this.usuario = response;
+      }
+    );
   }
 
-  loadUsuarios(): void {
-    this.usuarioService.getCajeros().subscribe(response => this.usuarios = response);
+  update(): void {
+    // TODO: Queda pendiente la implementación de la actualización ya que no es necesario para esta primera version
   }
 
 }

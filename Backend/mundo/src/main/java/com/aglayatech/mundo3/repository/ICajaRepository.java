@@ -17,4 +17,7 @@ public interface ICajaRepository extends JpaRepository<Caja, Long> {
 
     @Query("Select c From Caja c where c.usuario = :usuario and c.estado = :estado")
     Optional<Caja> findByUsuario(@Param("usuario") Usuario usuario, @Param("estado") EstadoCajaEnum estado);
+
+    @Query(value = "Select c.* From cajas c where c.id_usuario = :idusuario and c.estado = :estado", nativeQuery = true)
+    Optional<Caja> findCajaByUsuarioAndEstado(@Param("idusuario") Integer idusuario, @Param("estado") String estado);
 }

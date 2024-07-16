@@ -5,11 +5,36 @@
             <div class="col-sm-6">
                 <h1>{{title}}</h1>
                 <br>
-                <a *ngIf="auth.hasRole('ROLE_ADMIN')"
+                <a *ngIf="cajaUsuario === null else elseblock"
                     [routerLink]="['/cajas/create']" class="btn bg-gradient-success">
                     <i class="fas fa-plus-circle"></i>
                     Nuevo
                 </a>
+
+                <ng-template #elseblock>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success dropdown-buttons dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-coins"></i> Opciones
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="">Editar Monto Inicial</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="">Cerrar Caja</a>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info dropdown-buttons dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-compress-arrows-alt"></i> Movimientos de Caja
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="">Devolucion</a>
+                            <a class="dropdown-item">Prestamo</a>
+                            <a class="dropdown-item">Gasto</a>
+                            <a class="dropdown-item" >Pago a Proveedor</a>
+                        </div>
+                    </div>
+                </ng-template>
             </div>
         </div>
     </div><!-- /.container-fluid -->
@@ -18,7 +43,7 @@
 <div class="card">
     <div class="card-body table-responsive">
 
-        <div *ngIf="cajas?.length == 0" class="alert alert-info alert-dismissible">
+        <div *ngIf="cajaUsuario === null" class="alert alert-info alert-dismissible">
             <h5>
                 <i class="icon fas fa-info"></i>
                 Atención!
@@ -26,59 +51,48 @@
 
             No existe ninguna caja aperturada en la base de datos!
         </div>
-
-        <table id="cajas" class="table table-hover table-striped table-bordered dataTable dtr-inline table-sm" role="grid" 
-            *ngIf="cajas?.length > 0">
-
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Usuario</th>
-                    <th>Monto Apertura</th>
-                    <th>Monto Actual</th>
-                    <th>Estado</th>
-                    <th>Fecha Apertura</th>
-                    <th *ngIf="auth.hasRole('ROLE_ADMIN') || auth.hasRole('ROLE_COBRADOR')">Opciones</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr *ngFor="let caja of cajas">
-                    <td>{{caja.idCaja}}</td>
-                    <td>{{caja.usuario.usuario}}</td>
-                    <td>{{caja.montoApertura}}</td>
-                    <td>{{caja.montoActual}}</td>
-                    <td>{{caja.estado}}</td>
-                    <td>{{caja.fechaApertura | date: 'dd/MM/yyyy - hh:mm'}}</td>
-                    <td *ngIf="auth.hasRole('ROLE_ADMIN') || auth.hasRole('ROLE_COBRADOR')" class="center-options">
-
-                        <button class="btn bg-gradient-info margin" type="button" name="edit" 
-                            placement="top" ngbTooltip="Editar Cliente" title="Editar"
-                            [routerLink]="['/cajas/create', caja.idCaja]">
-
-                            <i class="fas fa-edit"></i>
-                        </button>&nbsp;
-
-                        <button class="btn bg-gradient-danger margin" type="button" name="delete" (click)="delete(caja)"
-                        placement="top" ngbTooltip="Eliminar Cliente" title="Eliminar">
-
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-
-            <tfoot>
-                <tr>
-                    <th>ID</th>
-                    <th>Usuario</th>
-                    <th>Monto Apertura</th>
-                    <th>Monto Actual</th>
-                    <th>Estado</th>
-                    <th>Fecha Apertura</th>
-                    <th *ngIf="auth.hasRole('ROLE_ADMIN') || auth.hasRole('ROLE_COBRADOR')">Opciones</th>
-                </tr>
-            </tfoot>
+        <table *ngIf="cajaUsuario !== null">
+            <tr>
+                <td class="color-box" style="background-color: #000000;"></td>
+                <td>MONTO INICIAL</td>
+                <td class="amount">{{cajaUsuario.montoApertura | currency: "Q" : "symbol"}}</td>
+            </tr>
+            <tr>
+                <td class="color-box" style="background-color: #28a745;"></td>
+                <td>INGRESOS</td>
+                <td class="amount">S/ 0.00</td>
+            </tr>
+            <tr>
+                <td class="color-box" style="background-color: #dc3545;"></td>
+                <td>DEVOLUCIONES</td>
+                <td class="amount">S/ 0.00</td>
+            </tr>
+            <tr>
+                <td class="color-box" style="background-color: #ffc107;"></td>
+                <td>PRÉSTAMOS</td>
+                <td class="amount">S/ 0.00</td>
+            </tr>
+            <tr>
+                <td class="color-box" style="background-color: #17a2b8;"></td>
+                <td>GASTOS</td>
+                <td class="amount">S/ 0.00</td>
+            </tr>
+            <tr class="total income">
+                <td colspan="2">INGRESOS TOTALES</td>
+                <td class="amount">S/ 0.00</td>
+            </tr>
+            <tr class="total expense">
+                <td colspan="2">EGRESOS TOTALES</td>
+                <td class="amount">S/ 0.00</td>
+            </tr>
+            <tr class="total balance">
+                <td colspan="2">SALDO</td>
+                <td class="amount">S/ 0.00</td>
+            </tr>
+            <tr class="total initial-balance">
+                <td colspan="2">MONTO INICIAL + SALDO</td>
+                <td class="amount">S/ 25000.00</td>
+            </tr>
         </table>
     </div>
 </div>

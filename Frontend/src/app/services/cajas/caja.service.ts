@@ -43,6 +43,14 @@ export class CajaService {
     );
   }
 
+  getCajaPorUsuario(idusuario: number): Observable<Caja> {
+    return this.httpClient.get<Caja>(`${this.url}/cajas/caja-usuario/${idusuario}/get`).pipe(
+      catchError(e => {
+        return throwError(e);
+      })
+    );
+  }
+
   create(caja: Caja): Observable<any> {
     return this.httpClient.post<any>(`${this.url}/cajas/post`, caja).pipe(
       catchError(e => {
