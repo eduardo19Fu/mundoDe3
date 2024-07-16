@@ -62,37 +62,15 @@ public class MovimientoProductoApiController {
 
 	@Secured({"ROLE_ADMIN", "ROLE_INVENTARIO"})
 	@PostMapping(value = "/movimientos")
-	public ResponseEntity<?> create(@RequestBody MovimientoProducto movimientoProducto, BindingResult result) {
+	public ResponseEntity<Map<String, Object>> create(@RequestBody MovimientoProducto movimientoProducto, BindingResult result) {
 		
 		MovimientoProducto newMovimiento = null;
-		// Producto producto = null;
 		Map<String, Object> response = new HashMap<>();
-		
-		if(result.hasErrors()) {
-			// tratamiento de errores
-			List<String> errors = result.getFieldErrors().stream()
-					.map(err -> "El campo '".concat(err.getField().concat("' ")).concat(err.getDefaultMessage()))
-					.collect(Collectors.toList());
-	
-			response.put("errors", errors);
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
-		}
-		
-		try {
-			newMovimiento = serviceMove.save(movimientoProducto);
-			// producto = serviceProducto.findById(newMovimiento.getProducto().getIdProducto());
-			
-			newMovimiento.calcularStock();
-			serviceProducto.save(newMovimiento.getProducto());
-		} catch (DataAccessException e) {
-			response.put("mensaje", "¡Error en la Base de Datos!");
-			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		
+		newMovimiento = serviceMove.save(movimientoProducto);
+
 		response.put("mensaje", "¡El movimiento ha sido creado con éxito!");
 		response.put("movimientoProducto", newMovimiento);
-		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 		
 	}
 

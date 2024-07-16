@@ -29,7 +29,7 @@
                                         <strong>Marca:</strong>
                                         {{producto.marcaProducto ? producto.marcaProducto.marca : ''}}</li>
                                     <li *ngIf="!auth.hasRole('ROLE_COBRADOR')" class="list-group-item">
-                                        <strong>Precio Costo:</strong>
+                                        <strong>Precio Compra:</strong>
                                         {{producto.precioCompra | currency: "Q" : "symbol"}}
                                     </li>
                                     <li class="list-group-item">
@@ -54,7 +54,7 @@
                                     </li>
                                 </ul>
 
-                                <div *ngIf="auth.hasRole('ROLE_ADMIN') || auth.hasRole('ROLE_INVENTARIO')"
+                                <!-- <div *ngIf="auth.hasRole('ROLE_ADMIN') || auth.hasRole('ROLE_INVENTARIO')"
                                     class="input-group mb-3">
                                     <div class="custom-file">
                                         <input (change)="seleccionarImagen($event)" type="file"
@@ -73,7 +73,7 @@
                                         aria-valuemin="0" aria-valuemax="100">
                                         {{progreso}}%
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="col-sm">
                                 <!--Mostrar Imagen guardada-->

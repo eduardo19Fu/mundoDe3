@@ -11,6 +11,8 @@
 		pr.nombre AS NOMBRE,
 		(pr.precio_compra * pr.stock) AS PRECIO_COMPRA,
 		(pr.precio_venta * pr.stock) AS PRECIO_VENTA,
+		pr.precio_venta AS PRECIO_VENTA_UNITARIO,
+		pr.precio_compra AS PRECIO_COMPRA_UNITARIO,
         mc.marca AS MARCA,
         pr.stock AS STOCK,
         IFNULL((
@@ -43,6 +45,16 @@ ORDER BY pr.nombre ASC]]>
 	<field name="PRECIO_VENTA" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="PRECIO_VENTA"/>
 		<property name="com.jaspersoft.studio.field.label" value="PRECIO_VENTA"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="productos"/>
+	</field>
+	<field name="PRECIO_VENTA_UNITARIO" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="precio_venta"/>
+		<property name="com.jaspersoft.studio.field.label" value="PRECIO_VENTA_UNITARIO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="productos"/>
+	</field>
+	<field name="PRECIO_COMPRA_UNITARIO" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="precio_compra"/>
+		<property name="com.jaspersoft.studio.field.label" value="PRECIO_COMPRA_UNITARIO"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="productos"/>
 	</field>
 	<field name="MARCA" class="java.lang.String">
@@ -81,25 +93,22 @@ ORDER BY pr.nombre ASC]]>
 		<initialValueExpression><![CDATA[$F{PRECIO_COMPRA}]]></initialValueExpression>
 	</variable>
 	<title>
-		<band height="63" splitType="Stretch">
+		<band height="82" splitType="Stretch">
 			<staticText>
-				<reportElement x="111" y="1" width="350" height="30" isPrintWhenDetailOverflows="true" uuid="eb82a987-46ae-48c0-a164-cb8b074f9dfd"/>
+				<reportElement x="113" y="1" width="350" height="30" isPrintWhenDetailOverflows="true" uuid="eb82a987-46ae-48c0-a164-cb8b074f9dfd"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="16" isBold="true"/>
 				</textElement>
-				<text><![CDATA[PANGOSOFT]]></text>
+				<text><![CDATA[REPORTE DE INVENTARIO]]></text>
 			</staticText>
+			<image>
+				<reportElement x="0" y="1" width="111" height="81" uuid="431c8242-56da-4588-a434-34bf46e75174"/>
+				<imageExpression><![CDATA[this.getClass().getResourceAsStream("/static/images/reports-image/kairos-logo.png")]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>
 		<band height="27" splitType="Stretch">
-			<staticText>
-				<reportElement x="0" y="0" width="80" height="18" uuid="9d895a30-546c-4b19-b77b-638de0bba57d"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[INVENTARIO]]></text>
-			</staticText>
 			<textField pattern="d/M/yyyy h:mm a">
 				<reportElement x="470" y="0" width="100" height="18" uuid="e50e80d3-998e-4510-9d30-ad9e48613396"/>
 				<textElement verticalAlignment="Middle"/>
@@ -138,16 +147,7 @@ ORDER BY pr.nombre ASC]]>
 				<text><![CDATA[NOMBRE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="294" y="0" width="70" height="20" forecolor="#FFFFFF" uuid="21829096-feb5-4812-a0f1-e2145caa4744">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1adab17f-dd1f-49ad-b308-2ae74c4cd179"/>
-				</reportElement>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[MARCA]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="367" y="0" width="40" height="20" forecolor="#FFFFFF" uuid="a90a6e86-8e6d-4007-a752-ba15e396a481">
+				<reportElement x="295" y="0" width="34" height="20" forecolor="#FFFFFF" uuid="a90a6e86-8e6d-4007-a752-ba15e396a481">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7f2833f8-fc27-4b7f-be68-243a3a8080ea"/>
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -200,10 +200,28 @@ ORDER BY pr.nombre ASC]]>
 				</textElement>
 				<text><![CDATA[P. V.]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="331" y="0" width="36" height="20" forecolor="#FFFFFF" uuid="14fe249a-7e1a-4013-a2d3-c9be007cdc24">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5f7943c1-aa5f-4b28-86b0-429c20f2f4a0"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[P.C.U.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="369" y="0" width="38" height="20" forecolor="#FFFFFF" uuid="110d4406-0b7c-46bb-8d21-8ef717e2b944">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="44da3ac6-ef64-4e1b-aa4e-dbf50784e878"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[P.V.U.]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="20" splitType="Stretch">
+		<band height="22" splitType="Stretch">
 			<textField textAdjust="StretchHeight">
 				<reportElement x="33" y="0" width="86" height="20" uuid="2059401f-d6b5-49a4-a81c-eb225b07c446">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="fb7cd833-55ef-4305-9d1c-6e9bfcdb8d48"/>
@@ -222,17 +240,8 @@ ORDER BY pr.nombre ASC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{NOMBRE}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight">
-				<reportElement x="294" y="0" width="70" height="20" isPrintWhenDetailOverflows="true" uuid="eafda75d-043a-4cb8-bfea-fafb0021244f">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1adab17f-dd1f-49ad-b308-2ae74c4cd179"/>
-				</reportElement>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{MARCA}]]></textFieldExpression>
-			</textField>
 			<textField>
-				<reportElement x="367" y="0" width="40" height="20" uuid="ef81b655-878a-48aa-a5dc-c5510cb67645">
+				<reportElement x="295" y="0" width="34" height="20" uuid="ef81b655-878a-48aa-a5dc-c5510cb67645">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7f2833f8-fc27-4b7f-be68-243a3a8080ea"/>
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -282,6 +291,24 @@ ORDER BY pr.nombre ASC]]>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PRECIO_VENTA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="Q#,##0.00;¤-#,##0.00">
+				<reportElement x="331" y="0" width="36" height="20" uuid="05e3a17c-4149-4739-b74e-d5d366081f6e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5f7943c1-aa5f-4b28-86b0-429c20f2f4a0"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PRECIO_COMPRA_UNITARIO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="Q#,##0.00;¤-#,##0.00">
+				<reportElement x="369" y="0" width="38" height="20" uuid="64c8d8ef-ae28-476f-af77-46bf9c04004b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="44da3ac6-ef64-4e1b-aa4e-dbf50784e878"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PRECIO_VENTA_UNITARIO}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

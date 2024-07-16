@@ -1,0 +1,69 @@
+<div class="container">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">{{title}}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <!-- general form elements -->
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Ingrese los datos</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form #cajaForm="ngForm">
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="form-group col">
+                            <label for="monto-apertura">Monto Apertura</label>
+                            <input type="number" class="form-control" name="monto-apertura" [(ngModel)]="caja.montoApertura" required
+                                placeholder="Ingrese monto de Apertura" #montoApertura="ngModel">
+
+                            <div *ngIf="montoApertura.invalid && (montoApertura.touched || montoApertura.dirty)">
+                                <span class="requerido">
+                                    Debe ingresar un monto de apertura v&aacute;lido.
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group col">
+                            <label for="cajero">Cajero</label>
+                            <select class="form-control" name="usuario" [(ngModel)]="caja.usuario" required #usuario="ngModel">
+                                <option *ngFor="let usuario of usuarios" [ngValue]="usuario">{{usuario.usuario}}</option>
+                            </select>
+
+                            <div *ngIf="usuario.invalid && (usuario.touched || usuario.dirty)">
+                                <span class="requerido">
+                                    El NIT no puede estar vacío.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                    <button type="submit" role="button" class="btn btn-primary" (click)="createV2()"
+                        *ngIf="!caja.idCaja else elseBlock" [disabled]="!cajaForm.form.valid">
+                        Guardar
+                    </button>
+
+                    <ng-template #elseBlock>
+                        <button type="submit" role="button" class="btn btn-primary" (click)="update()"
+                            [disabled]="!cajaForm.form.valid">
+                            Actualizar
+                        </button>
+                    </ng-template>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -18,7 +18,7 @@
                         *ngIf="productos?.length > 0 && !loading">
                         <thead>
                             <tr>
-                                <th>Serie</th>
+                                <!-- <th>Serie</th> -->
                                 <th>Codigo</th>
                                 <th>Nombre</th>
                                 <th>Precio</th>
@@ -32,7 +32,7 @@
 
                         <tbody>
                             <tr *ngFor="let producto of productos">
-                                <td>{{ producto.serie }}</td>
+                                <!-- <td>{{ producto.serie }}</td> -->
                                 <td>{{ producto.codProducto }}</td>
                                 <td>{{ producto.nombre }}</td>
                                 <td>{{ producto.precioVenta | currency: "Q" : "symbol" }}</td>
@@ -50,7 +50,7 @@
 
                         <tfoot>
                             <tr>
-                                <th>Serie</th>
+                                <!-- <th>Serie</th> -->
                                 <th>Codigo</th>
                                 <th>Nombre</th>
                                 <th>Precio</th>

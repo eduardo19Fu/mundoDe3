@@ -1,8 +1,12 @@
 package com.aglayatech.mundo3.service.impl;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -14,11 +18,14 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import com.aglayatech.mundo3.configurations.ReportProperties;
 import com.aglayatech.mundo3.model.TipoFactura;
 import com.aglayatech.mundo3.repository.ITipoFacturaRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -37,9 +44,8 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 
 @Service
+@Slf4j
 public class FacturaServiceImpl implements IFacturaService {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(FacturaServiceImpl.class);
 
 	@Autowired
 	private IFacturaRepository repoFactura;
@@ -49,6 +55,12 @@ public class FacturaServiceImpl implements IFacturaService {
 
 	@Autowired
 	protected DataSource localDataSource;
+
+	@Autowired
+	private ReportProperties reportProperties;
+
+	@Autowired
+	private Environment environment;
 
 	@Override
 	public List<Factura> findAll() {
@@ -92,7 +104,7 @@ public class FacturaServiceImpl implements IFacturaService {
 		InputStream file = getClass().getResourceAsStream("/reports/poliza.jrxml");
 		params.put("usuario", usuario);
 		params.put("fechaIni", fecha);
-		LOGGER.info("Fecha para poliza => " + params.get("fechaIni"));
+		log.info("Fecha para poliza => " + params.get("fechaIni"));
 
 		JasperReport jasperReport = JasperCompileManager.compileReport(file);
 		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, con);
@@ -106,12 +118,20 @@ public class FacturaServiceImpl implements IFacturaService {
 	// GENERADOR DE REPORTE DE FACTURA
 	@Override
 	public byte[] showBill(Long idfactura)
-			throws JRException, FileNotFoundException, SQLException {
+            throws JRException, IOException, SQLException {
 
 		Connection con = localDataSource.getConnection();
 		Map<String, Object> params = new HashMap<>();
 		params.put("idfactura", idfactura);
-		InputStream file = getClass().getResourceAsStream("/reports/factura.jrxml");
+		String reportPath = reportProperties.getReportPath();
+		InputStream file = null;
+
+		file = getClass().getResourceAsStream("/reports/comprobante-venta.jrxml");
+//		if(reportPath == null || reportPath.isEmpty()) {
+//			file = getClass().getResourceAsStream("/reports/comprobante-venta.jrxml");
+//		} else {
+//			file = Files.newInputStream(Paths.get(reportPath));
+//		}
 
 		JasperReport jasperReport = JasperCompileManager.compileReport(file);
 		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, con);
@@ -129,7 +149,7 @@ public class FacturaServiceImpl implements IFacturaService {
 		Connection con = localDataSource.getConnection();
 		Map<String, Object> params = new HashMap<>();
 		params.put("idfactura", idfactura);
-		InputStream file = getClass().getResourceAsStream("/reports/factura_2.jrxml");
+		InputStream file = getClass().getResourceAsStream( "/reports/factura_2.jrxml");
 
 		JasperReport jasperReport = JasperCompileManager.compileReport(file);
 		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, con);

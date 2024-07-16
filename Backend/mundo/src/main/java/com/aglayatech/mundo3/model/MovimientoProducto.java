@@ -61,22 +61,5 @@ public class MovimientoProducto implements Serializable {
 	public void configFecha() {
 		this.fechaMovimiento = new Date();
 	}
-	
-	public void calcularStock() {
-		if(this.getTipoMovimiento().getTipoMovimiento().equals("ENTRADA") || this.getTipoMovimiento().getTipoMovimiento().equals("ANULACION FACTURA")
-				|| this.getTipoMovimiento().getTipoMovimiento().equals("COMPRA")) {
-
-			int tempStock = this.producto.getStock();
-			this.setStockInicial(tempStock);
-			this.producto.setStock((tempStock + this.getCantidad()));
-
-		} else if(this.getTipoMovimiento().getTipoMovimiento().equals("SALIDA") || this.getTipoMovimiento().getTipoMovimiento().equals("VENTA")
-				|| this.getTipoMovimiento().getTipoMovimiento().equals("ELIMINAR_COMPRA")) {
-
-			int tempStock = this.producto.getStock();
-			this.setStockInicial(tempStock);
-			this.producto.setStock((tempStock - this.getCantidad()));
-		}
-	}
 
 }

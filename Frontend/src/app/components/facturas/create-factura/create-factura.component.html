@@ -24,7 +24,7 @@
 
 <div class="row">
 
-    <div class="col-md-9">
+    <div class="col-md-10">
         <div class="card card-red">
             <div class="card-header">
                 <h3 class="card-title">Ingrese los datos</h3>
@@ -58,7 +58,7 @@
                             </div>
                         </div>
 
-                        <div class="col">
+                        <!-- <div class="col">
                             <label for="buscar" style="display: block;">Buscar</label>
                             <input #mybuscar type="text" id="buscar" name="buscar" class="form-control"
                                 style="width: 70%; display: inline; margin-right: 10px;" (keyup.enter)="buscarCliente()"
@@ -68,17 +68,17 @@
                                 data-target="#modal-buscar-cliente">
                                 <i class="fas fa-search"></i>
                             </button>
-                        </div>
+                        </div> -->
                     </div>
                     <hr>
                     <div class="row">
-                        <div class="col">
+                        <!-- <div class="col">
                             <div class="form-group">
                                 <label for="nit">NIT:</label>
                                 <input type="text" class="form-control" name="nit"
                                     value="{{cliente ? cliente.nit : ''}}" disabled>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col">
                             <div class="form-group">
                                 <label for="nombre">Nombre:</label>
@@ -100,13 +100,13 @@
                     <hr>
 
                     <div class="row">
-                        <div class="col-md-auto">
+                        <div class="col">
                             <div class="form-group">
-                                <label for="serie" style="display: block;">Serie</label>
-                                <input type="text" class="form-control" name="serie" id="serie"
-                                    value="{{producto ? producto.serie : ''}}"
-                                    style="width: 70%; display: inline; margin-right: 10px;">
-                                    <!-- (keyup.enter)="buscarProducto()"> -->
+                                <label for="codigo" style="display: block;">C&oacute;digo</label>
+                                <input type="text" class="form-control" name="codigo" id="codigo"
+                                    value="{{producto ? producto.codProducto : ''}}"
+                                    style="width: 90%; display: inline; margin-right: 10px;"
+                                    (keyup.enter)="buscarProducto()">
 
                                 <button type="button" class="btn bg-gradient-fuchsia" data-toggle="modal"
                                     data-target="#modal-buscar-producto">
@@ -116,27 +116,27 @@
                             </div>
                         </div>
 
-                        <div class="col">
+                        <!-- <div class="col">
                             <div class="form-group">
                                 <label for="nombre">Producto</label>
                                 <input type="text" class="form-control" name="nombre"
                                     value="{{producto ? producto.nombre : ''}}" [disabled]="producto.nombre">
 
                             </div>
-                        </div>
+                        </div> -->
 
-                        <div class="col-sm-2">
+                        <!-- <div class="col-sm-2">
                             <div class="form-group">
                                 <label for="cantidad" style="display: block;">Cantidad</label>
                                 <input type="number" name="cantidad" id="cantidad" class="form-control"
-                                    style="width: 65%; display: inline; margin-right: 10px;" value="0"
-                                    (keyup.enter)="agregarLinea()" autofocus>
+                                    style="width: 65%; display: inline; margin-right: 10px;" value=""
+                                    (keyup.enter)="agregarLinea()">
 
                                 <button type="button" class="btn bg-gradient-cyan" (click)="agregarLinea()">
                                     <i class="fas fa-plus-square"></i>
                                 </button>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 
@@ -146,9 +146,10 @@
                         <thead>
                             <tr>
                                 <th>Codigo</th>
-                                <th>Serie</th>
+                                <!-- <th>Serie</th> -->
                                 <th>Producto</th>
-                                <th>Precio</th>
+                                <th>P. Venta</th>
+                                <th>P. Compra</th>
                                 <th>Cantidad</th>
                                 <th>Descuento</th>
                                 <th>N. Precio</th>
@@ -158,9 +159,10 @@
                         <tbody>
                             <tr *ngFor="let item of factura.itemsFactura; let i = index">
                                 <td>{{item.producto.codProducto}}</td>
-                                <td>{{item.producto.serie}}</td>
+                                <!-- <td>{{item.producto.serie}}</td> -->
                                 <td>{{item.producto.nombre}}</td>
                                 <td>{{item.producto.precioVenta | currency: "Q" : "symbol"}}</td>
+                                <td>{{item.producto.precioCompra | currency: "Q" : "symbol"}}</td>
                                 <td>
                                     <input type="number" id="cant" value="{{item.cantidad}}"
                                         class="form-control col-sm-6"
@@ -194,7 +196,7 @@
     </div>
 
     <!-- VENTANA DE CALCULO DE CAMBIO POR EFECTIVO PAGADO -->
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="card card-fuchsia">
             <div class="card-header">
                 <h3 class="card-title">Calculo de Cambio y Total</h3>

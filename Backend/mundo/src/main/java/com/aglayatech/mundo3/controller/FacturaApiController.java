@@ -149,9 +149,8 @@ public class FacturaApiController {
 
                     // Actualiza el stock de los productos que forman parte de cada una de las lineas de la factura
                     for (DetalleFactura item : newFactura.getItemsFactura()) {
-                        if (this.updateExistencias(item.getProducto(), item.getCantidad(), "venta".toUpperCase())){
-                            this.movimiento(item.getProducto(), newFactura, item.getCantidad(), "venta".toUpperCase());
-                        }
+                        log.info("Actualizando existencias del producto: {}", item.getProducto().getCodProducto());
+                        serviceMovimiento.save(buildMovimiento(item.getProducto(), factura.getUsuario(), item.getCantidad(), "VENTA"));
                     }
                 } else {
                     response.put("mensaje", "Factura no pudo ser registrada..");
@@ -212,9 +211,8 @@ public class FacturaApiController {
 
                 // Recorre el listado de items de la factura y retorna al stock la cantidad comprada
                 for (DetalleFactura linea : cancelFactura.getItemsFactura()) {
-                    if (this.updateExistencias(linea.getProducto(), linea.getCantidad(), "anulacion factura".toUpperCase())) {
-                        this.movimiento(linea.getProducto(), cancelFactura, linea.getCantidad(), "anulacion factura".toUpperCase());
-                    }
+                    log.info("Devolviendo las existencias de la venta anulada al producto: {}", linea.getProducto().getCodProducto());
+                    serviceMovimiento.save(buildMovimiento(linea.getProducto(), cancelFactura.getUsuario(), linea.getCantidad(), "ANULACION FACTURA"));
                 }
 
                 serviceFactura.save(cancelFactura);
@@ -353,33 +351,22 @@ public class FacturaApiController {
     }
 
     /**
-     * metodo que actualiza las existencias según el tipo de movimiento que se este registrando
-     * @param producto
-     * @param cantidad
-     * @param tipoMovimiento
+     *
+     * Método encargado de llevar a cabo la inicialización de un objeto de tipo MovimientoProducto para llevar a cabo
+     * los registros respectivos dentro de la tabla movimientos_producto de la base de datos para cada una de las líneas
+     * de la venta llevada a cabo.
+     * @param producto Objeto principal de cada item del detalle de la venta
+     * @param cantidad Cantidad de productos vendidos de cada item
+     * @param tipoMovimiento El tipo de movimiento que se esta llevando a cabo para ser evaluado
+     * @return MovimientoProducto Objeto resultante del movimiento guardado en la Base de Datos
+     *
      * */
-    private boolean updateExistencias(Producto producto, int cantidad, String tipoMovimiento) {
-        Producto productoUpdated = new Producto();
-
-        if (tipoMovimiento.equals("venta".toUpperCase())) {
-            producto.setStock(producto.getStock() - cantidad);
-        } else if (tipoMovimiento.equals("anulacion factura".toUpperCase())) {
-            producto.setStock(producto.getStock() + cantidad);
-        }
-
-        productoUpdated = serviceProducto.save(producto);
-        return (productoUpdated != null ? true : false);
-    }
-
-    private void movimiento(Producto producto, Factura factura, int cantidad, String tipoMovimiento) {
-        MovimientoProducto movimiento = new MovimientoProducto();
-
-        movimiento.setTipoMovimiento(serviceMovimiento.findTipoMovimiento(tipoMovimiento));
-        movimiento.setUsuario(factura.getUsuario());
-        movimiento.setProducto(producto);
-        movimiento.setStockInicial(producto.getStock());
-        movimiento.setCantidad(cantidad);
-
-        serviceMovimiento.save(movimiento);
+    private MovimientoProducto buildMovimiento(Producto producto, Usuario usuario, int cantidad, String tipoMovimiento) {
+        return MovimientoProducto.builder()
+                .producto(producto)
+                .cantidad(cantidad)
+                .usuario(usuario)
+                .tipoMovimiento(serviceMovimiento.findTipoMovimiento(tipoMovimiento))
+                .build();
     }
 }

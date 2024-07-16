@@ -78,7 +78,7 @@
 
                         <!-- Aquí va el botón de eliminar -->
                         <button class="btn bg-gradient-danger margin" name="cancel" type="button" placement="top" ngbTooltip="Anular Factura"
-                            (click)="cancel(factura)" *ngIf="auth.hasRole('ROLE_ADMIN')"
+                            (click)="cancel(factura)" *ngIf="auth.hasRole('ROLE_ADMIN') || auth.hasRole('ROLE_COBRADOR')" 
                             [disabled]="factura.estado.idEstado === 4">
                             <i class="fas fa-ban"></i>
                         </button>

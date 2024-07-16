@@ -34,7 +34,6 @@ export class CreateClienteComponent implements OnInit {
   cargarCliente(): void {
 
     this.activatedRoute.params.subscribe(params => {
-      // tslint:disable-next-line: no-string-literal
       const id = params['id'];
       if (id) {
         this.serviceCliente.getCliente(id).subscribe(
@@ -56,7 +55,6 @@ export class CreateClienteComponent implements OnInit {
   }
 
   update(): void{
-    // tslint:disable-next-line: deprecation
     this.serviceCliente.update(this.cliente).subscribe(
       response => {
         this.router.navigate(['/clientes']);

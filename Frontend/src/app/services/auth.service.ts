@@ -41,7 +41,7 @@ export class AuthService {
 
   login(usuario: Usuario): Observable<any> {
     const urlEndpoint = this.url + '/oauth/token';
-    const credenciales = btoa('angularapp' + ':' + 'pangosoftpuntodeventastore2021');
+    const credenciales = btoa('angularapp' + ':' + 'pangosoftpuntodeventastore2024');
     const httpHeaders = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Basic ' + credenciales });
 
     const params = new URLSearchParams();

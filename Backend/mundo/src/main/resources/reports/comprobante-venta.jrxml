@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.19.1.final using JasperReports Library version 6.19.1-867c00bf88cd4d784d404379d6c05e1b419e8a4c  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ComprobanteVenta" pageWidth="226" pageHeight="566" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="186" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="3cb39c83-5729-43a2-b1f9-4a6d167c299d">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="idfactura" class="java.lang.Long"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT 	cl.nombre,
+		cl.nit,
+        cl.direccion,
+        date_format(f.fecha, '%d/%m/%Y'),
+        LPAD(f.no_factura,15,'0') AS no_factura,
+        fd.cantidad,
+        p.nombre as nombre_producto,
+        fd.sub_total,
+        fd.sub_total_descuento,
+        fd.descuento,
+        f.total,
+        p.precio_venta,
+        (
+			SELECT get_numero_letras(f.total)
+        ) AS cantidad_letras
+FROM facturas AS f
+INNER JOIN facturas_detalle AS fd ON fd.id_factura = f.id_factura
+INNER JOIN clientes AS cl ON cl.id_cliente = f.id_cliente
+INNER JOIN productos AS p ON p.id_producto = fd.id_producto
+WHERE f.id_factura =  $P{idfactura}]]>
+	</queryString>
+	<field name="nombre" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombre"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
+	</field>
+	<field name="nit" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nit"/>
+		<property name="com.jaspersoft.studio.field.label" value="nit"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
+	</field>
+	<field name="direccion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="direccion"/>
+		<property name="com.jaspersoft.studio.field.label" value="direccion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
+	</field>
+	<field name="date_format(f.fecha, &apos;%d/%m/%Y&apos;)" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name">
+			<![CDATA[date_format(f.fecha, '%d/%m/%Y')]]>
+		</property>
+		<property name="com.jaspersoft.studio.field.label">
+			<![CDATA[date_format(f.fecha, '%d/%m/%Y')]]>
+		</property>
+	</field>
+	<field name="no_factura" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="no_factura"/>
+		<property name="com.jaspersoft.studio.field.label" value="no_factura"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="facturas"/>
+	</field>
+	<field name="cantidad" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="cantidad"/>
+		<property name="com.jaspersoft.studio.field.label" value="cantidad"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="facturas_detalle"/>
+	</field>
+	<field name="nombre_producto" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombre_producto"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="productos"/>
+	</field>
+	<field name="sub_total" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="sub_total"/>
+		<property name="com.jaspersoft.studio.field.label" value="sub_total"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="facturas_detalle"/>
+	</field>
+	<field name="sub_total_descuento" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="sub_total_descuento"/>
+		<property name="com.jaspersoft.studio.field.label" value="sub_total_descuento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="facturas_detalle"/>
+	</field>
+	<field name="descuento" class="java.lang.Float">
+		<property name="com.jaspersoft.studio.field.name" value="descuento"/>
+		<property name="com.jaspersoft.studio.field.label" value="descuento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="facturas_detalle"/>
+	</field>
+	<field name="total" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total"/>
+		<property name="com.jaspersoft.studio.field.label" value="total"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="facturas"/>
+	</field>
+	<field name="precio_venta" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="precio_venta"/>
+		<property name="com.jaspersoft.studio.field.label" value="precio_venta"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="productos"/>
+	</field>
+	<field name="cantidad_letras" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="get_numero_letras(f.total)"/>
+		<property name="com.jaspersoft.studio.field.label" value="cantidad_letras"/>
+	</field>
+	<variable name="v_cantidad_articulos" class="java.lang.Long" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{cantidad}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="68" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="180" height="13" uuid="e9747cad-8bed-4095-87ec-fd7d0207e3be"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COMERCIAL "KAIROS"]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="29" width="180" height="9" uuid="7f94ae98-e3d1-4ad8-915d-e1054a075c9d"/>
+				<textElement textAlignment="Center">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[COMPROBANTE DE VENTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="38" width="180" height="9" uuid="8c1a7b64-fd48-4319-a0d8-ba3ef2c91773"/>
+				<textElement textAlignment="Center">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[NUMERO DE COMPROBANTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="13" width="180" height="16" uuid="a421c337-1dde-4102-9ca9-68df53fc28cb"/>
+				<textElement textAlignment="Center">
+					<font size="5"/>
+				</textElement>
+				<text><![CDATA[2DA. AVENIDA 2-60 ZONA 2, BARRIO LA ESPERANZA
+JALAPA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="47" width="180" height="10" uuid="92a9927c-be85-4ea7-862f-bb80a7c77451"/>
+				<textElement textAlignment="Center">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{no_factura}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="57" width="180" height="11" uuid="d7dd5f8e-0445-4a04-a1a4-936cce3198de"/>
+				<textElement textAlignment="Center">
+					<font size="5" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Fecha de Emisión: " + $F{date_format(f.fecha, '%d/%m/%Y')}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch">
+			<line>
+				<reportElement x="0" y="-1" width="180" height="1" uuid="6aa78149-958e-4aa5-a155-37fee6f3c13c"/>
+			</line>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="10" splitType="Stretch">
+			<textField textAdjust="StretchHeight">
+				<reportElement x="0" y="0" width="80" height="9" uuid="50a50ff0-345c-4c4c-b994-0cea1369a06f"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_producto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="89" y="0" width="21" height="9" uuid="7d61997d-6a07-4e42-b36f-3fcd4c19b34c"/>
+				<textElement textAlignment="Center">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
+			</textField>
+			<textField pattern="Q#,##0.00;¤-#,##0.00">
+				<reportElement x="120" y="0" width="60" height="9" uuid="64576f66-910c-453e-a520-f6b30e549c41"/>
+				<textElement textAlignment="Center">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sub_total_descuento}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="458" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout"/>
+			<staticText>
+				<reportElement x="0" y="1" width="180" height="54" uuid="06fe7984-53b1-4bdd-ad0e-f903cd5fc6f3"/>
+				<textElement textAlignment="Center">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[GRACIAS POR SU COMPRA
+
+ES UN PLACER SERVIRLE
+ESPERAMOS QUE VUELVA PRONTO
+
+COMERCIAL KAIROS]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="180" height="1" uuid="1367f9bf-ce49-4f62-b05b-091690a10969"/>
+			</line>
+		</band>
+	</columnFooter>
+	<summary>
+		<band height="38" splitType="Stretch">
+			<staticText>
+				<reportElement x="52" y="2" width="34" height="8" uuid="bfdfaf2a-db70-4591-9e74-8a6fd5d3f9b6"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[Articulos:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="18" width="34" height="9" uuid="529d36ed-5987-4485-8ab2-21b372c6b978"/>
+				<textElement textAlignment="Right">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<textField pattern="Q#,##0.00;¤-#,##0.00">
+				<reportElement x="94" y="17" width="75" height="10" uuid="66ebad54-7033-4f2a-ba89-5ae8314e48f0"/>
+				<textElement textAlignment="Center">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="2" width="30" height="8" uuid="6590a239-599b-4b94-83ed-9413b2ad9d77"/>
+				<textElement>
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{v_cantidad_articulos}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
