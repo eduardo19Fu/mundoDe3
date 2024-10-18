@@ -1,19 +1,50 @@
 package com.aglayatech.mundo3.controller;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
+
 import java.sql.SQLException;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
 import com.aglayatech.mundo3.generics.ErroresHandler;
 import com.aglayatech.mundo3.generics.Excepcion;
-import com.aglayatech.mundo3.model.*;
-import com.aglayatech.mundo3.service.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.aglayatech.mundo3.model.Certificador;
+import com.aglayatech.mundo3.model.Correlativo;
+import com.aglayatech.mundo3.model.DetalleFactura;
+import com.aglayatech.mundo3.model.Emisor;
+import com.aglayatech.mundo3.model.Envio;
+import com.aglayatech.mundo3.model.Estado;
+import com.aglayatech.mundo3.model.Factura;
+import com.aglayatech.mundo3.model.MovimientoProducto;
+import com.aglayatech.mundo3.model.Producto;
+import com.aglayatech.mundo3.model.TipoFactura;
+import com.aglayatech.mundo3.model.Usuario;
+import com.aglayatech.mundo3.model.enums.TipoMovimientoProductoEnum;
+import com.aglayatech.mundo3.service.ICertificadorService;
+import com.aglayatech.mundo3.service.ICorrelativoService;
+import com.aglayatech.mundo3.service.IEmisorService;
+import com.aglayatech.mundo3.service.IEnvioService;
+import com.aglayatech.mundo3.service.IEstadoService;
+import com.aglayatech.mundo3.service.IFacturaService;
+import com.aglayatech.mundo3.service.IMovimientoProductoService;
+import com.aglayatech.mundo3.service.IProductoService;
+import com.aglayatech.mundo3.service.ITipoFacturaService;
+import com.aglayatech.mundo3.service.IUsuarioService;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -37,9 +68,8 @@ import net.sf.jasperreports.engine.JRException;
 @CrossOrigin(origins = {"http://localhost:4200", "https://dtodojalapa.xyz", "http://dtodojalapa.xyz"})
 @RestController
 @RequestMapping(value = {"/api"})
+@Slf4j
 public class FacturaApiController {
-
-    private static final Logger log = LoggerFactory.getLogger(FacturaApiController.class);
 
     @Autowired
     private IFacturaService serviceFactura;
@@ -109,6 +139,14 @@ public class FacturaApiController {
     }
 
     @Secured(value = {"ROLE_ADMIN", "ROLE_COBRADOR"})
+    @GetMapping("/facturas/get-listado-sp/get")
+    public ResponseEntity<List<Factura>> getFacturasSP(@RequestParam(required = false) String fechaIni,
+                                                       @RequestParam(required = false) String fechaFin) {
+        log.info("Buscando Facturas en las fechas comprandidas entre: {} y {}", fechaIni, fechaFin);
+        return ResponseEntity.ok(serviceFactura.facturasPorFecha(fechaIni, fechaFin));
+    }
+
+    @Secured(value = {"ROLE_ADMIN", "ROLE_COBRADOR"})
     @PostMapping(value = "/facturas")
     public ResponseEntity<?> create(@RequestBody Factura factura, BindingResult result) {
 
@@ -150,7 +188,7 @@ public class FacturaApiController {
                     // Actualiza el stock de los productos que forman parte de cada una de las lineas de la factura
                     for (DetalleFactura item : newFactura.getItemsFactura()) {
                         log.info("Actualizando existencias del producto: {}", item.getProducto().getCodProducto());
-                        serviceMovimiento.save(buildMovimiento(item.getProducto(), factura.getUsuario(), item.getCantidad(), "VENTA"));
+                        serviceMovimiento.save(buildMovimiento(item.getProducto(), factura.getUsuario(), item.getCantidad(), TipoMovimientoProductoEnum.VENTA));
                     }
                 } else {
                     response.put("mensaje", "Factura no pudo ser registrada..");
@@ -172,6 +210,7 @@ public class FacturaApiController {
 
 
         } catch (DataAccessException e) {
+            log.error("Ha ocurrido un error en la base de datos: {}", e.getCause().toString());
             response.put("mensaje", "¡Error en la base de datos!");
             response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -212,7 +251,7 @@ public class FacturaApiController {
                 // Recorre el listado de items de la factura y retorna al stock la cantidad comprada
                 for (DetalleFactura linea : cancelFactura.getItemsFactura()) {
                     log.info("Devolviendo las existencias de la venta anulada al producto: {}", linea.getProducto().getCodProducto());
-                    serviceMovimiento.save(buildMovimiento(linea.getProducto(), cancelFactura.getUsuario(), linea.getCantidad(), "ANULACION FACTURA"));
+                    serviceMovimiento.save(buildMovimiento(linea.getProducto(), cancelFactura.getUsuario(), linea.getCantidad(), TipoMovimientoProductoEnum.ANULACION_FACTURA));
                 }
 
                 serviceFactura.save(cancelFactura);
@@ -361,12 +400,12 @@ public class FacturaApiController {
      * @return MovimientoProducto Objeto resultante del movimiento guardado en la Base de Datos
      *
      * */
-    private MovimientoProducto buildMovimiento(Producto producto, Usuario usuario, int cantidad, String tipoMovimiento) {
+    private MovimientoProducto buildMovimiento(Producto producto, Usuario usuario, int cantidad, TipoMovimientoProductoEnum tipoMovimiento) {
         return MovimientoProducto.builder()
                 .producto(producto)
                 .cantidad(cantidad)
                 .usuario(usuario)
-                .tipoMovimiento(serviceMovimiento.findTipoMovimiento(tipoMovimiento))
+                .tipoMovimiento(tipoMovimiento)
                 .build();
     }
 }
