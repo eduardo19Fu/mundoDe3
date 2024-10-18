@@ -22,12 +22,16 @@ public interface IFacturaService {
 	public Page<Factura> findAll(Pageable pageable);
 	
 	public Factura findFactura(Long idfactura);
+
+	public Factura findFacturaBySerieAndComprobante(String serie, Long noComprobante);
 	
 	public Factura save(Factura factura);
 
 	public TipoFactura findTipoFactura(Integer idTipoFactura);
 
 	public Integer getMaxVentas();
+
+	public List<Factura> facturasPorFecha(String iniDate, String endDate);
 	
 	/********* PDF REPORTS SERVICES ***********/
 	

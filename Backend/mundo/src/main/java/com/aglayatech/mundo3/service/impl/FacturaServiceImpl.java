@@ -1,31 +1,34 @@
 package com.aglayatech.mundo3.service.impl;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.SQLException;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import java.sql.SQLException;
+import java.sql.Connection;
 import javax.sql.DataSource;
 
 import com.aglayatech.mundo3.configurations.ReportProperties;
+import com.aglayatech.mundo3.error.exceptions.NoContentException;
+import com.aglayatech.mundo3.error.exceptions.NotFoundException;
 import com.aglayatech.mundo3.model.TipoFactura;
 import com.aglayatech.mundo3.repository.ITipoFacturaRepository;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.core.env.Environment;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -44,23 +47,16 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class FacturaServiceImpl implements IFacturaService {
 
-	@Autowired
-	private IFacturaRepository repoFactura;
+	private final IFacturaRepository repoFactura;
+	private final ITipoFacturaRepository tipoFacturaRepository;
+	protected final DataSource localDataSource;
 
-	@Autowired
-	private ITipoFacturaRepository tipoFacturaRepository;
-
-	@Autowired
-	protected DataSource localDataSource;
-
-	@Autowired
-	private ReportProperties reportProperties;
-
-	@Autowired
-	private Environment environment;
+	private final ReportProperties reportProperties;
+	private final Environment environment;
 
 	@Override
 	public List<Factura> findAll() {
@@ -78,8 +74,38 @@ public class FacturaServiceImpl implements IFacturaService {
 	}
 
 	@Override
+	public Factura findFacturaBySerieAndComprobante(String serie, Long noComprobante) {
+		String __method = new Object() {}.getClass().getEnclosingClass().getSimpleName() + "::" + new Object() {}.getClass().getEnclosingMethod().getName();
+		log.debug("Enter {}", __method);
+
+		try {
+			Optional<Factura> factura = repoFactura.getFacturaBySerieAndNoFactura(serie, noComprobante);
+			if(factura.isPresent()) {
+				log.info("Retornando factura: {}", factura.get().getIdFactura());
+				return factura.get();
+			} else {
+				log.warn("La factura con serie {} y número de factura {} no existe", serie, noComprobante);
+				throw new NotFoundException("La factura no se encuentra registrada en la base de datos");
+			}
+		} catch (DataAccessException e) {
+			log.error("Ha ocurrido un error a nivel de base de datos: {}", e.getMessage());
+			throw new com.aglayatech.mundo3.error.exceptions.DataAccessException("Ha ocurrido un error a nivel de base de datos", e.getCause());
+		} finally {
+			log.debug("{} Exit", __method);
+		}
+	}
+
+	@Override
 	public Factura save(Factura factura) {
-		return repoFactura.save(factura);
+		String __method = new Object() {}.getClass().getEnclosingClass().getSimpleName() + "::" + new Object() {}.getClass().getEnclosingMethod().getName();
+		log.debug("Enter {}", __method);
+
+		try {
+			return repoFactura.save(factura);
+		} catch (DataAccessException e) {
+			log.error("Ha ocurrido un error a nivel de base de datos: {}", e.getMessage());
+			throw new com.aglayatech.mundo3.error.exceptions.DataAccessException(e.getMessage(), e.getCause());
+		}
 	}
 
 	@Override
@@ -90,6 +116,39 @@ public class FacturaServiceImpl implements IFacturaService {
 	@Override
 	public Integer getMaxVentas() {
 		return this.repoFactura.getMaxVentas();
+	}
+
+	@Override
+	public List<Factura> facturasPorFecha(String iniDate, String endDate) {
+		String __method = new Object() {}.getClass().getEnclosingClass().getSimpleName() + "::" + new Object() {}.getClass().getEnclosingMethod().getName();
+		log.debug("Enter {}", __method);
+
+		try {
+
+			Date date1;
+			Date date2;
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+			date1 = format.parse(iniDate);
+			date2 = format.parse(endDate);
+			List<Factura> facturas = repoFactura.findAllFacturas(date1, date2);
+
+			if(!facturas.isEmpty()) {
+				log.info("Devolviendo listado de Facturas en el rango de fechas: {} y {}", iniDate, endDate);
+				return facturas;
+			} else {
+				log.warn("No existen facturas registradas en el rango de fechas comprendidas entre: {} y {}", iniDate, endDate);
+				throw new NoContentException("No existen facturas registradas en el rango de fechas comprendidas entre: " + iniDate + " y " + endDate);
+			}
+		} catch (DataAccessException e) {
+			log.error("Ha ocurrido un error a nivel de Base de datos: {}", e.getMessage());
+			throw new com.aglayatech.mundo3.error.exceptions.DataAccessException("Ha ocurrido un error a nivel de Base de Datos", e.getCause());
+		} catch (ParseException e) {
+			log.error("No se puede llevar a cabo la conversión de fechas");
+			throw new com.aglayatech.mundo3.error.exceptions.ParseException("No se puede llevar a cabo la conversión de fechas", e.getCause());
+		} finally {
+			log.debug("{} Exit", __method);
+		}
 	}
 
 	/****************** PDF REPORT SERVICES *******************/

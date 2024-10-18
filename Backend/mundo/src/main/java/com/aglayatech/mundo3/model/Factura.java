@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class Factura implements Serializable {
 	private Long idFactura;
 	private Long noFactura;
 	private String serie;
-	private Double total;
+	private BigDecimal total;
 	private Double iva;
 	private String correlativoSat;
 	private String certificacionSat;
@@ -60,12 +61,12 @@ public class Factura implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario")
-	@JsonIgnoreProperties({ "password", "hibernateLazyInitializer", "handler" })
+	@JsonIgnoreProperties({ "password", "hibernateLazyInitializer", "handler", "roles", "fechaRegistro", "enabled" })
 	private Usuario usuario;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_cliente")
-	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" , "fechaRegistro"})
 	private Cliente cliente;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
