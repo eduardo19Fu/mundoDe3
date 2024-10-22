@@ -71,6 +71,9 @@ import { MovimientosCajaComponent } from './components/movimientos-caja/movimien
 import { CrearMovimientoCajaComponent } from './components/movimientos-caja/crear-movimiento-caja/crear-movimiento-caja.component';
 import { ModalUpdateMontoCajaComponent } from './components/cajas/modal-update-monto-caja/modal-update-monto-caja.component';
 import { ModalCrearMovimientoCajaComponent } from './components/cajas/modal-crear-movimiento-caja/modal-crear-movimiento-caja.component';
+import { NotasCreditoComponent } from './components/notas-credito/notas-credito.component';
+import { CreateNotaCreditoComponent } from './components/notas-credito/create-nota-credito/create-nota-credito.component';
+import { ModalDetalleNotaComponent } from './components/notas-credito/modal-detalle-nota/modal-detalle-nota.component';
 
 @NgModule({
   declarations: [
@@ -136,7 +139,10 @@ import { ModalCrearMovimientoCajaComponent } from './components/cajas/modal-crea
     MovimientosCajaComponent,
     CrearMovimientoCajaComponent,
     ModalUpdateMontoCajaComponent,
-    ModalCrearMovimientoCajaComponent
+    ModalCrearMovimientoCajaComponent,
+    NotasCreditoComponent,
+    CreateNotaCreditoComponent,
+    ModalDetalleNotaComponent
   ],
   imports: [
     BrowserModule,

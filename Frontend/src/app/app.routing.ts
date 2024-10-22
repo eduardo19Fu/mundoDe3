@@ -38,6 +38,8 @@ import { CotizacionesComponent } from './components/cotizaciones/cotizaciones.co
 import { CreateCotizacionComponent } from './components/cotizaciones/create-cotizacion/create-cotizacion.component';
 import { CajasComponent } from './components/cajas/cajas.component';
 import { CreateCajaComponent } from './components/cajas/create-caja/create-caja.component';
+import { NotasCreditoComponent } from './components/notas-credito/notas-credito.component';
+import { CreateNotaCreditoComponent } from './components/notas-credito/create-nota-credito/create-nota-credito.component';
 
 const appRoutes: Routes = [
     {path: '', component: LoginComponent},
@@ -68,13 +70,17 @@ const appRoutes: Routes = [
     {path: 'cotizaciones/create/:id', component: CreateCotizacionComponent, canActivate: [AuthGuard, RoleGuard], data: {role: ['ROLE_ADMIN', 'ROLE_COBRADOR']}},
 
 
-    /****** MENUS DE FACTURAS ******/
+    /****** MENUS DE VENTAS ******/
     {path: 'facturas/index', component: FacturasComponent, canActivate: [AuthGuard, RoleGuard], data: {role: ['ROLE_ADMIN', 'ROLE_COBRADOR']}},
     {path: 'facturas/create', component: CreateFacturaComponent, canActivate: [AuthGuard, RoleGuard], data: {role: ['ROLE_ADMIN', 'ROLE_COBRADOR']}},
     {path: 'facturas/create/:envio', component: CreateFacturaComponent, canActivate: [AuthGuard, RoleGuard], data: {role: ['ROLE_ADMIN', 'ROLE_COBRADOR']}},
     {path: 'facturas/correlativos/index', component: CorrelativosComponent, canActivate: [AuthGuard, RoleGuard], data: {role: ['ROLE_ADMIN']}},
     {path: 'facturas/correlativos/create', component: CreateCorrelativoComponent, canActivate: [AuthGuard, RoleGuard], data: {role: ['ROLE_ADMIN']}},
     {path: 'facturas/correlativos/create/:id', component: CreateCorrelativoComponent, canActivate: [AuthGuard, RoleGuard], data: {role: ['ROLE_ADMIN']}},
+
+    /****** MENUS DE NOTAS DE CREDITO ******/
+    {path: 'notas-credito/index', component: NotasCreditoComponent, canActivate: [AuthGuard, RoleGuard], data: {role: ['ROLE_ADMIN', 'ROLE_COBRADOR']}},
+    {path: 'notas-credito/create', component: CreateNotaCreditoComponent, canActivate: [AuthGuard, RoleGuard], data: {role: ['ROLE_ADMIN', 'ROLE_COBRADOR']}},
 
     /****** MENUS DE CLIENTES ******/
     {path: 'clientes/index', component: ClientesComponent, canActivate: [AuthGuard, RoleGuard], data: {role: ['ROLE_ADMIN', 'ROLE_COBRADOR']}},

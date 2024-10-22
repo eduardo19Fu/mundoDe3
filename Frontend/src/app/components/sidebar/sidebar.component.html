@@ -115,7 +115,7 @@
 
                 
                 <!-- MENUS DE CAJAS -->
-                <li class="nav-header" *ngIf="authService.hasRole('ROLE_COBRADOR') || authService.hasRole('ROLE_ADMIN')">Ventas</li>
+                <li class="nav-header" *ngIf="authService.hasRole('ROLE_COBRADOR') || authService.hasRole('ROLE_ADMIN')">Ventas y M&aacute;s</li>
                 <li class="nav-item" *ngIf="authService.hasRole('ROLE_ADMIN') || authService.hasRole('ROLE_COBRADOR')"
                     [ngClass]="{'menu-open': router.url.startsWith('/cajas')}">
                     <a href="" class="nav-link" [ngClass]="{'active': router.url.startsWith('/cajas')}" >
@@ -169,12 +169,13 @@
                     </ul>
                  </li> <!-- FINAL DEL MENU COTIZACIONES -->
                 
+                 <!-- MENUS DE VENTAS -->
                 <li class="nav-item" *ngIf="authService.hasRole('ROLE_COBRADOR') || authService.hasRole('ROLE_ADMIN')"
                     [ngClass]="{'menu-open': router.url.startsWith('/facturas')}">
                     <a href="" class="nav-link" [ngClass]="{'active': router.url.startsWith('/facturas')}">
                         <i class="fas fa-money-bill nav-icon"></i>
                         <p>
-                            Facturas
+                            Ventas
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
@@ -183,7 +184,7 @@
                         <li class="nav-item">
                             <a [routerLink]="['/facturas/index']" class="nav-link" [routerLinkActive]="['active']">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Facturas Emitidas</p>
+                                <p>Ventas Realizadas</p>
                             </a>
                         </li>
 
@@ -193,12 +194,35 @@
                                 <p>Correlativos</p>
                             </a>
                         </li>
+
                     </ul>
-                </li><!-- MENU DE FACTURAS FINAL -->
+                </li><!-- MENU DE VENTAS FINAL -->
+
+                <!-- MENU DE DEVOLUCIONES -->
+                <li class="nav-item" *ngIf="authService.hasRole('ROLE_COBRADOR') || authService.hasRole('ROLE_ADMIN')"
+                    [ngClass]="{'menu-open': router.url.startsWith('/notas-credito')}">
+                    
+                    <a href="" class="nav-link" [ngClass]="{'active': router.url.startsWith('/notas-credito')}">
+                        <i class="fas fa-exchange-alt nav-icon"></i>
+                        <p>
+                            Notas de Cr&eacute;dito
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav-treeview">
+                        <li class="nav-item" *ngIf="authService.hasRole('ROLE_ADMIN') || authService.hasRole('ROLE_COBRADOR')">
+                            <a [routerLink]="['/notas-credito/index']" class="nav-link" [routerLinkActive]="['active']">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Notas Realizadas</p>
+                            </a>
+                        </li>
+                    </ul>
+
+                </li> <!-- FINAL DEL MENU DE DEVOLUCIONES -->
 
                 <!-- MENU DE COMPRAS -->
                 <li class="nav-header" *ngIf="authService.hasRole('ROLE_ADMIN') || authService.hasRole('ROLE_INVENTARIO')">Compras</li>
-
                 <li class="nav-item" *ngIf="authService.hasRole('ROLE_ADMIN') || authService.hasRole('ROLE_INVENTARIO')"
                     [ngClass]="{'menu-open': router.url.startsWith('/compras')}">
 
