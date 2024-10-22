@@ -1,27 +1,26 @@
 import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
-
-import { UsuarioAuxiliar } from 'src/app/models/auxiliar/usuario-auxiliar';
-import { Cliente } from 'src/app/models/cliente';
-import { Correlativo } from 'src/app/models/correlativo';
-import { DetalleFactura } from 'src/app/models/detalle-factura';
-import { Factura } from 'src/app/models/factura';
-import { Producto } from 'src/app/models/producto';
-
-import { AuthService } from 'src/app/services/auth.service';
-import { ClienteService } from 'src/app/services/cliente.service';
-import { CorrelativoService } from 'src/app/services/correlativos/correlativo.service';
-import { ClienteCreateService } from 'src/app/services/facturas/cliente-create.service';
-import { FacturaService } from 'src/app/services/facturas/factura.service';
-import { ProductoService } from 'src/app/services/producto.service';
-import { UsuarioService } from 'src/app/services/usuarios/usuario.service';
-
-import swal from 'sweetalert2';
-import { ModalCambioService } from '../../../services/facturas/modal-cambio.service';
-import { EnvioService } from '../../../services/envios/envio.service';
-import { Envio } from '../../../models/envio';
 import { ActivatedRoute } from '@angular/router';
+
+import { UsuarioAuxiliar } from '../../../models/auxiliar/usuario-auxiliar';
+import { Cliente } from '../../../models/cliente';
+import { Correlativo } from '../../../models/correlativo';
+import { DetalleFactura } from '../../../models/detalle-factura';
+import { Factura } from '../../../models/factura';
+import { Producto } from '../../../models/producto';
+import { Envio } from '../../../models/envio';
 import { DetalleEnvio } from '../../../models/detalle-envio';
 import { TipoFactura } from '../../../models/tipo-factura';
+
+import { AuthService } from '../../../services/auth.service';
+import { ClienteService } from '../../../services/cliente.service';
+import { CorrelativoService } from '../../../services/correlativos/correlativo.service';
+import { ClienteCreateService } from '../../../services/facturas/cliente-create.service';
+import { FacturaService } from '../../../services/facturas/factura.service';
+import { ProductoService } from '../../../services/producto.service';
+import { UsuarioService } from '../../../services/usuarios/usuario.service';
+import { EnvioService } from '../../../services/envios/envio.service';
+
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-create-factura',
@@ -359,14 +358,6 @@ export class CreateFacturaComponent implements OnInit {
           error => {
             swal.fire(`Error al crear factura para imprimir.`, error.message, 'error');
           });
-        
-        /*
-        ------- Código para abrir una url en caso de tener activado FEL ---------
-        const url = 'https://report.feel.com.gt/ingfacereport/ingfacereport_documento?uuid=' + response.factura.certificacionSat;
-
-        const a = document.createElement('a');
-        window.open(url, '_blank').focus(); */
-
       }
     );
   }

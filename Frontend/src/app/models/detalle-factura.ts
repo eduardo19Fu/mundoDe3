@@ -15,12 +15,12 @@ export class DetalleFactura {
 
     public calcularPrecioDescuento(): number{
         return this.descuento <= 0 ? this.producto.precioVenta 
-        : (Math.round(((this.producto.precioVenta - this.descuento) + Number.EPSILON) * 100) / 100);
+        : Math.round((this.producto.precioVenta - this.descuento) * 100) / 100;
     }
 
     public calcularImporteDescuento(): number{
         return this.descuento <= 0 ? this.producto.precioVenta * this.cantidad
-        : (Math.round(((this.producto.precioVenta - this.descuento) + Number.EPSILON) * 100) / 100) * this.cantidad;
+        : Math.round((this.producto.precioVenta - this.descuento) * this.cantidad * 100) / 100;
     }
 
     public calcularImporteDescuentoSinPorcentaje(): number {

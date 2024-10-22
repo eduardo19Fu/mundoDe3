@@ -213,7 +213,7 @@ public class EnvioApiController {
         MovimientoProducto movimiento = new MovimientoProducto();
 
         try {
-            movimiento.setTipoMovimiento(movimientoProductoService.findTipoMovimiento("envio".toUpperCase()));
+            movimiento.setTipoMovimiento(null);
             movimiento.setUsuario(compra.getUsuario());
             movimiento.setProducto(producto);
             movimiento.setStockInicial(producto.getStock());
