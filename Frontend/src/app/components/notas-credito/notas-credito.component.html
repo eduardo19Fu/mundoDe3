@@ -1,0 +1,88 @@
+<!-- MODAL FACTURA -->
+<app-modal-cotizacion-detalle *ngIf="notaSeleccionada" [notaCredito]="notaSeleccionada"></app-modal-cotizacion-detalle>
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>{{title}}</h1>
+                <br>
+                <a [routerLink]="['/notas-credito/create']" class="btn bg-gradient-success">
+                    <i class="fas fa-plus-circle"></i>
+                    Nueva
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="card">
+    <div class="card-body table-responsive">
+
+        <div *ngIf="notasCredito?.length == 0" class="alert alert-info alert-dismissible">
+            <h5>
+                <i class="icon fas fa-info"></i>
+                Atención!
+            </h5>
+
+            No existe ninguna cotizaci&oacute;n registrada en la base de datos!
+        </div>
+
+        <table id="cotizaciones" class="table table-hover table-striped table-bordered dataTable dtr-inline table-sm"
+            role="grid" *ngIf="notasCredito?.length > 0">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>No. Comprobante</th>
+                    <th>Serie Comprobante</th>
+                    <th>Emisor</th>
+                    <th *ngIf="auth.hasRole('ROLE_ADMIN') || auth.hasRole('ROLE_COBRADOR')">Opciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let nota of notasCredito">
+                    <td>{{nota.idNotaCredito}}</td>
+                    <td>{{nota.fechaNota | date: 'dd/MM/yyyy - hh:mm'}}</td>
+                    <td>{{nota.montoNota | currency: 'Q' : 'symbol'}}</td>
+                    <td>{{nota.noComprobante}}</td>
+                    <td>{{nota.serieComprobante}}</td>
+                    <td>{{nota.usuario.usuario}}</td>
+                    <td class="center-options" *ngIf="auth.hasRole('ROLE_ADMIN') || auth.hasRole('ROLE_COBRADOR')">
+
+                        <button class="btn bg-gradient-success margin" name="detail" type="button" placement="top" ngbTooltip="Detalle"
+                            (click)="abrirDetalle(cotizacion)">
+                            <i class="fas fa-asterisk"></i>
+                        </button>
+
+                        <button class="btn bg-gradient-warning margin" name="print" type="button" placement="top" ngbTooltip="Imprimir Cotización"
+                            (click)="print(cotizacion)">
+                            <i class="fas fa-print"></i>
+                        </button>
+
+                        <!-- Aquí va el botón de eliminar -->
+                        <button class="btn bg-gradient-danger margin" name="cancel" type="button" placement="top" ngbTooltip="Eliminar Cotizacion"
+                            (click)="delete(cotizacion)" *ngIf="auth.hasRole('ROLE_ADMIN')">
+                            <i class="fas fa-ban"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+
+            <tfoot>
+                <tr>
+                    <th>#</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>No. Comprobante</th>
+                    <th>Serie Comprobante</th>
+                    <th>Emisor</th>
+                    <th *ngIf="auth.hasRole('ROLE_ADMIN') || auth.hasRole('ROLE_COBRADOR')">Opciones</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

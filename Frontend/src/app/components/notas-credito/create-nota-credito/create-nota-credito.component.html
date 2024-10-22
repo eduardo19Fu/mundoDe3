@@ -1,0 +1,219 @@
+<!-- MODAL DE REGISTRO PARA CLIENTES -->
+<app-modal-create *ngIf="nitIngresado" [nit]="nitIngresado" (clienteCreado)="cargarCliente($event)"></app-modal-create>
+
+<!-- MODAL PARA BUSCAR PRODUCTOS -->
+<app-modal-buscar-producto (producto)="loadProducto($event)"></app-modal-buscar-producto>
+
+<!-- MODAL PARA BUSCAR CLIENTES -->
+<app-modal-buscar-cliente (cliente)="loadCliente($event)"></app-modal-buscar-cliente>
+
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0 text-dark">{{title}}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-md-9">
+        <div class="card card-yellow">
+            <div class="card-header">
+                <h3 class="card-title">Ingrese los datos</h3>
+            </div>
+            <form>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="usuario">Usuario</label>
+                                <input class="form-control" type="text" name="usuario"
+                                    value="{{usuario.primerNombre + ' ' + usuario.apellido}}" [disabled]="usuario">
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="noComprobante">No. Comprobante</label>
+                                <input class="form-control" type="text" name="noComprobante" [ngModel]="notaCredito.noComprobante"
+                                    required #noComprobante="ngModel">
+                            </div>
+
+                            <div *ngIf="noComprobante.invalid && (noComprobante.dirty || noComprobante.touched)">
+                                <span class="requerido" *ngIf="noComprobante.errors.required">
+                                    Debe ingresar número del comprobante de la venta.
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="serieComprobante">Serie Comprobante</label>
+                                <input class="form-control" type="text" name="serieComprobante" [ngModel]="notaCredito.serieComprobante"
+                                    required #serieComprobante="ngModel">
+                                
+                                <div *ngIf="serieComprobante.invalid && (serieComprobante.dirty || serieComprobante.touched)">
+                                    <span class="requerido" *ngIf="serieComprobante.errors.required">
+                                        Debe ingresar serie del comprobante de la venta.
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="tipoDevolucion">Tipo de Devoluci&oacute;n</label>
+                                <select name="tipoDevolucion" id="tipoDevolucion" class="form-control" [(ngModel)]="notaCredito.tipoDevolucion">
+                                    <option value="undefined">Seleccione una Opci&oacute;n</option>
+                                    <option value="EFECTIVO">Efectivo</option>
+                                    <option value="EXISTENCIAS">Existencias</option>
+                                    <option value="CREDITO">Cr&eacute;dito</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="nit">NIT:</label>
+                                <input type="text" class="form-control" name="nit"
+                                    value="{{cliente ? cliente.nit : ''}}" disabled>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="nombre">Nombre:</label>
+                                <input type="text" class="form-control" name="nombre"
+                                    value="{{cliente ? cliente.nombre : ''}}" disabled>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="direccion">Dirección:</label>
+                                <input type="text" class="form-control" name="direccion"
+                                    value="{{cliente ? cliente.direccion : ''}}" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="codigo" style="display: block;">C&oacute;digo</label>
+                                <input type="text" class="form-control" name="codigo" id="codigo"
+                                    value="{{producto ? producto.codProducto : ''}}"
+                                    style="width: 90%; display: inline; margin-right: 10px;"
+                                    (keyup.enter)="buscarProducto()">
+
+                                <button type="button" class="btn bg-gradient-fuchsia" data-toggle="modal"
+                                    data-target="#modal-buscar-producto">
+                                    <i class="fas fa-search"></i>
+                                </button>
+
+                            </div>
+                        </div>
+
+                        <!-- <div class="col">
+                            <div class="form-group">
+                                <label for="nombre">Producto</label>
+                                <input type="text" class="form-control" name="nombre"
+                                    value="{{producto ? producto.nombre : ''}}" [disabled]="producto.nombre">
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label for="cantidad" style="display: block;">Cantidad</label>
+                                <input type="number" name="cantidad" id="cantidad" class="form-control"
+                                    style="width: 65%; display: inline; margin-right: 10px;" value="0"
+                                    (keyup.enter)="agregarLinea()" autofocus>
+
+                                <button type="button" class="btn bg-gradient-cyan" (click)="agregarLinea()">
+                                    <i class="fas fa-plus-square"></i>
+                                </button>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+
+                <!-- LISTADO DE PRODUCTOS AGREGADOS -->
+                <div class="card-body table-responsive">
+                    <table class="table table-hover table-sm">
+                        <thead>
+                            <tr>
+                                <th>Codigo</th>
+                                <th>Producto</th>
+                                <th>Cantidad Devuelta</th>
+                                <th>Cantidad</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of notaCredito.items; let i = index">
+                                <td>{{item.producto.codProducto}}</td>
+                                <td>{{item.producto.nombre}}</td>
+                                <td>{{item.producto.precioVenta | currency: "Q" : "symbol"}}</td>
+                                <td>
+                                    <input type="number" id="cant" value="{{item.cantidad}}"
+                                        class="form-control col-sm-6"
+                                        (change)="actualizarCantidad(item.producto.idProducto, $event)"
+                                        (keyup)="actualizarCantidad(item.producto.idProducto, $event)">
+                                </td>
+
+                                <td>{{item.subTotalDescuento | currency: "Q" : "symbol"}}</td>
+                                <td>
+                                    <button type="button" class="btn bg-gradient-danger" (click)="eliminarItem(i)">
+                                        X
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                </div>  
+            </form>
+        </div>
+    </div>
+
+    <!-- VENTANA DE CALCULO DE CAMBIO POR EFECTIVO PAGADO -->
+    <div class="col-md-3">
+        <div class="card card-fuchsia">
+            <div class="card-header">
+                <h3 class="card-title">Calculo de Cambio y Total</h3>
+            </div>
+            <div class="card-body">
+                <h4>
+                    Total: 
+                    <span>
+                        <strong>
+                            {{(notaCredito.calcularTotal() | currency: "Q": "symbol")}}
+                        </strong>
+                    </span>
+                </h4>
+                <hr>
+            </div>
+
+            <div class="card-footer">
+                <!-- <input type="submit" role="button" class="btn btn-primary" value="Guardar"
+                    [disabled]="!cliente.idCliente || (cotizacion.itemsProforma.length <= 0)" (click)="createCotizacion()"> -->
+
+                    <button type="submit" class="btn btn-primary"
+                        [disabled]="(notaCredito.items.length <= 0)" (click)="createNotaCredito()">
+
+                        <i class="fas fa-save"></i> Guardar
+                    </button>
+            </div>
+        </div>
+    </div>
+</div>
