@@ -31,7 +31,7 @@ export class ModalBuscarProductoMovimientoComponent implements OnInit {
   }
 
   loadProductos(): void {
-    this.productoService.getProductosActivos().subscribe(
+    this.productoService.getProductosActivosSP().subscribe(
       productos => {
         this.productos = productos;
         this.jqueryConfigs.configDataTableModal("productos");

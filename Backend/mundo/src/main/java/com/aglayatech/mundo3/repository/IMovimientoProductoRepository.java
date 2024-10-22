@@ -2,9 +2,7 @@ package com.aglayatech.mundo3.repository;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
-import com.aglayatech.mundo3.model.TipoMovimiento;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,7 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.aglayatech.mundo3.model.MovimientoProducto;
 import com.aglayatech.mundo3.model.Producto;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 public interface IMovimientoProductoRepository extends JpaRepository<MovimientoProducto, Long> {
 	
@@ -21,10 +18,6 @@ public interface IMovimientoProductoRepository extends JpaRepository<MovimientoP
 	// Movimientos listados por rango de fechas
 	List<MovimientoProducto> findByFechaMovimientoBetween(Date fechaIni, Date fechaFin);
 
-	@Query(value = "Select tm from TipoMovimiento tm where tm.tipoMovimiento = :nombre")
-	Optional<TipoMovimiento> findTipoMovimientoByNombre(@Param("nombre") String nombre);
-
-	@Query(value = "Select tm from TipoMovimiento tm")
-	List<TipoMovimiento> findTiposMovimiento();
-
+	@Query(value = "Select * from movimientos_producto mp order by mp.fecha_movimiento desc Limit 1000", nativeQuery = true)
+	List<MovimientoProducto> findAllMovimientosLimit();
 }

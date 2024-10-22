@@ -7,14 +7,14 @@ import java.io.OutputStream;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.aglayatech.mundo3.model.TipoMovimiento;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -72,14 +72,6 @@ public class MovimientoProductoApiController {
 		response.put("movimientoProducto", newMovimiento);
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 		
-	}
-
-	@Secured(value = {"ROLE_ADMIN", "ROLE_INVENTARIO"})
-	@GetMapping("/movimientos/tipos-movimiento/get")
-	public List<TipoMovimiento> listarTiposMovimientos() {
-		List<TipoMovimiento> lista = new ArrayList<>();
-		lista = this.serviceMove.getTiposMovimiento();
-		return lista;
 	}
 
 	/** REPORTS CONTROLLERS

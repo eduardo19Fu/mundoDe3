@@ -5,17 +5,19 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
 import com.aglayatech.mundo3.model.Estado;
-import com.aglayatech.mundo3.model.TipoMovimiento;
+import com.aglayatech.mundo3.model.enums.TipoMovimientoProductoEnum;
 import com.aglayatech.mundo3.service.IEstadoService;
 import com.aglayatech.mundo3.service.IProductoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,7 +47,7 @@ public class MovimientoProductoServiceImpl implements IMovimientoProductoService
 
 	@Override
 	public List<MovimientoProducto> findAll() {
-		return repoMovimiento.findAll();
+		return repoMovimiento.findAllMovimientosLimit();
 	}
 
 	@Override
@@ -83,11 +85,6 @@ public class MovimientoProductoServiceImpl implements IMovimientoProductoService
 	}
 
 	@Override
-	public List<TipoMovimiento> getTiposMovimiento() {
-		return this.repoMovimiento.findTiposMovimiento();
-	}
-
-	@Override
 	public List<MovimientoProducto> findByFecha(Date fechaIni, Date fechaFin) {
 		return repoMovimiento.findByFechaMovimientoBetween(fechaIni, fechaFin);
 	}
@@ -111,46 +108,50 @@ public class MovimientoProductoServiceImpl implements IMovimientoProductoService
 			producto = movimientoProducto.getProducto();
 			movimientoProducto.setStockInicial(tmpStock);
 
-			switch (movimientoProducto.getTipoMovimiento().getTipoMovimiento()) {
-				case "VENTA":
-				case "SALIDA":
-				case "ELIMINAR_COMPRA":
-					log.debug("Operando salidas al stock por operaciones de tipo VENTA, SALIDA");
-					producto.setStock(tmpStock - movimientoProducto.getCantidad());
+			if(!movimientoProducto.getTipoMovimiento().equals(TipoMovimientoProductoEnum.REFACTURACION)){
+				switch (movimientoProducto.getTipoMovimiento()) {
+					case VENTA:
+					case SALIDA:
+					case ELIMINAR_COMPRA:
+						log.debug("Operando salidas al stock por operaciones de tipo {}", movimientoProducto.getTipoMovimiento());
+						producto.setStock(tmpStock - movimientoProducto.getCantidad());
 
-					if(producto.getStock() <= 12 && producto.getStock() > 0)
-						estado = estadoService.findByEstado("POR AGOTARSE");
-					else if(producto.getStock() == 0)
-						estado = estadoService.findByEstado("AGOTADO");
-					else
-						estado = estadoService.findByEstado("ACTIVO");
+						if(producto.getStock() <= 12 && producto.getStock() > 0)
+							estado = estadoService.findByEstado("POR AGOTARSE");
+						else if(producto.getStock() == 0)
+							estado = estadoService.findByEstado("AGOTADO");
+						else
+							estado = estadoService.findByEstado("ACTIVO");
 
-					producto.setEstado(estado);
-					break;
-				case "COMPRA":
-				case "ENTRADA":
-				case "ANULACION FACTURA":
-					log.debug("Operando suma al stock por operaciones de tipo COMPRA, ENTRADA");
-					producto.setStock(tmpStock + movimientoProducto.getCantidad());
+						producto.setEstado(estado);
+						productoSaved = productoService.save(producto);
+						break;
+					case COMPRA:
+					case ENTRADA:
+					case ANULACION_FACTURA:
+					case DEVOLUCION:
+						log.debug("Operando suma al stock por operaciones de tipo {}", movimientoProducto.getTipoMovimiento());
+						producto.setStock(tmpStock + movimientoProducto.getCantidad());
 
-					if(producto.getStock() > 12)
-						estado = estadoService.findByEstado("ACTIVO");
-					else if(producto.getStock() > 0)
-						estado = estadoService.findByEstado("POR AGOTARSE");
+						if(producto.getStock() > 12)
+							estado = estadoService.findByEstado("ACTIVO");
+						else if(producto.getStock() > 0)
+							estado = estadoService.findByEstado("POR AGOTARSE");
 
-					producto.setEstado(estado);
-					break;
-				default:
-					log.debug("No existe la operación deseada");
-					break;
+						producto.setEstado(estado);
+						productoSaved = productoService.save(producto);
+						break;
+					default:
+						log.debug("No existe la operación deseada");
+						break;
+				}
 			}
 
-			productoSaved = productoService.save(producto);
+			return (productoSaved != null);
 		} catch (Exception ex) {
 			log.error("Error: {}", ex.getMessage());
+			return false;
 		}
-
-		return (productoSaved != null);
 	}
 
 	/********* PDF REPORTS SERVICES ***********/
@@ -159,26 +160,23 @@ public class MovimientoProductoServiceImpl implements IMovimientoProductoService
 	public byte[] inventory(Date fechaIni, Date fechaFin) 
 			throws JRException, FileNotFoundException, SQLException { // REPORTE DE INVENTARIO
 		
-		Connection con = localDateSource.getConnection();
-		Map<String, Object> params = new HashMap<>();
-		InputStream file = getClass().getResourceAsStream("/reports/rpt_inventario.jrxml");
+		try(Connection con = localDateSource.getConnection()) {
+			Map<String, Object> params = new HashMap<>();
+			InputStream file = getClass().getResourceAsStream("/reports/rpt_inventario.jrxml");
 
-		params.put("fechaIni", fechaIni);
-		params.put("fechaFin", fechaFin);
-		
-		JasperReport jasperReport = JasperCompileManager.compileReport(file);
-		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, con);
-		
-		ByteArrayOutputStream byteArrayOutputStream = getByteArrayOutputStream(jasperPrint);
-		
-		con.close();
-		return byteArrayOutputStream.toByteArray();
-	}
+			params.put("fechaIni", fechaIni);
+			params.put("fechaFin", fechaFin);
 
-	@Override
-	public TipoMovimiento findTipoMovimiento(String tipoMovimiento) {
-		Optional<TipoMovimiento> optional = this.repoMovimiento.findTipoMovimientoByNombre(tipoMovimiento);
-		return (optional.isPresent() ? optional.get() : null);
+			JasperReport jasperReport = JasperCompileManager.compileReport(file);
+			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, con);
+
+			ByteArrayOutputStream byteArrayOutputStream = getByteArrayOutputStream(jasperPrint);
+
+
+			return byteArrayOutputStream.toByteArray();
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	protected ByteArrayOutputStream getByteArrayOutputStream(JasperPrint jasperPrint) throws JRException {

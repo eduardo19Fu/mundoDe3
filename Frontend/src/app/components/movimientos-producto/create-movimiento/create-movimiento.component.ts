@@ -10,7 +10,6 @@ import { UsuarioService } from '../../../services/usuarios/usuario.service';
 import { Producto } from 'src/app/models/producto';
 import { MovimientoProducto } from '../../../models/movimiento-producto';
 import { UsuarioAuxiliar } from 'src/app/models/auxiliar/usuario-auxiliar';
-import { TipoMovimiento } from 'src/app/models/tipo-movimiento';
 
 import { JqueryConfigs } from '../../../utils/jquery/jquery-utils';
 import Swal from 'sweetalert2';
@@ -31,7 +30,7 @@ export class CreateMovimientoComponent implements OnInit, AfterViewInit {
   modalForm: FormGroup;
 
   productos: Producto[];
-  tiposMovimiento: TipoMovimiento[];
+  movimientos: string[] = ['ENTRADA','SALIDA'];
 
   constructor(
     private movimientoProductoService: MovimientosProductoService,
@@ -52,7 +51,7 @@ export class CreateMovimientoComponent implements OnInit, AfterViewInit {
       usuario => {
         this.usuario = usuario;
         this.movimientoProducto.usuario = this.usuario;
-        this.loadTiposMovimiento();
+        // this.loadTiposMovimiento();
       },
       error => {
         Swal.fire(`Error: ${error.status}`, '', 'error');
@@ -71,7 +70,7 @@ export class CreateMovimientoComponent implements OnInit, AfterViewInit {
     if (this.movimientoProducto.producto) {
       
       if (this.movimientoProducto.producto.stock >= this.movimientoProducto.cantidad 
-            || this.movimientoProducto.tipoMovimiento.tipoMovimiento === 'ENTRADA') {
+            || this.movimientoProducto.tipoMovimiento === 'ENTRADA') {
 
         this.movimientoProductoService.create(this.movimientoProducto).subscribe(
           response => {
@@ -118,15 +117,5 @@ export class CreateMovimientoComponent implements OnInit, AfterViewInit {
     (document.getElementById('button-x')).click();
     this.buscarProducto();
   }
-
-  loadTiposMovimiento(): void {
-    this.movimientoProductoService.getTiposMovimiento().subscribe(
-      tiposMovimiento => {
-        this.tiposMovimiento = tiposMovimiento.filter(tipoMovimiento => tipoMovimiento.tipoMovimiento === 'ENTRADA' || tipoMovimiento.tipoMovimiento === 'SALIDA');
-
-      }
-    );
-  }
-
 
 }

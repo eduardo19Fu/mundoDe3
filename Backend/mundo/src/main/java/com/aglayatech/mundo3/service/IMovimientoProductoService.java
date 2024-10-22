@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
-import com.aglayatech.mundo3.model.TipoMovimiento;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -25,12 +24,9 @@ public interface IMovimientoProductoService {
 	public Page<MovimientoProducto> findProductoMoves(Producto producto, Pageable pageable);
 	
 	public MovimientoProducto save(MovimientoProducto movimientoProducto);
-
-	public List<TipoMovimiento> getTiposMovimiento();
 	
 	/********* PDF REPORTS SERVICES ***********/
 	
 	public byte[] inventory(Date fechaIni, Date fechaFin) throws JRException, FileNotFoundException, SQLException;
 
-    public TipoMovimiento findTipoMovimiento(String venta);
 }

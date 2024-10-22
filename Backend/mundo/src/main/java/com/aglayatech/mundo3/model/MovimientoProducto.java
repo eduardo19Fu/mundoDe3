@@ -3,6 +3,7 @@ package com.aglayatech.mundo3.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.aglayatech.mundo3.model.enums.TipoMovimientoProductoEnum;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +12,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -39,6 +42,9 @@ public class MovimientoProducto implements Serializable {
 	private Integer cantidad;
 	private Integer stockInicial;
 
+	@Enumerated(EnumType.STRING)
+	private TipoMovimientoProductoEnum tipoMovimiento;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date fechaMovimiento;
 
@@ -51,11 +57,6 @@ public class MovimientoProducto implements Serializable {
 	@JoinColumn(name = "id_usuario")
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	private Usuario usuario;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_tipo_movimiento")
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-	private TipoMovimiento tipoMovimiento;
 	
 	@PrePersist
 	public void configFecha() {
