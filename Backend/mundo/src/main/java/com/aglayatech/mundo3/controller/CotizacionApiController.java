@@ -5,12 +5,15 @@ import com.aglayatech.mundo3.model.Cotizacion;
 import com.aglayatech.mundo3.model.Estado;
 import com.aglayatech.mundo3.service.ICotizacionService;
 import com.aglayatech.mundo3.service.IEstadoService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.JRException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
@@ -33,18 +36,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(value = {"*"})
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
+@Slf4j
 public class CotizacionApiController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CotizacionApiController.class);
-
-    @Autowired
-    private ICotizacionService proformaService;
-
-    @Autowired
-    private IEstadoService estadoService;
+    private final ICotizacionService proformaService;
+    private final IEstadoService estadoService;
 
     @Secured(value = {"ROLE_ADMIN", "ROLE_COBRADOR"})
     @GetMapping("/cotizaciones")
@@ -129,27 +128,8 @@ public class CotizacionApiController {
     }
 
     @GetMapping(value = "/cotizaciones/generate/{id}")
-    public void generateBill(@PathVariable("id") Long idcotizacion, HttpServletResponse httpServletResponse)
-            throws JRException, SQLException, FileNotFoundException {
-
-
-        try {
-            byte[] bytesCotizacion = proformaService.showCotizacion(idcotizacion);
-            ByteArrayOutputStream out = new ByteArrayOutputStream(bytesCotizacion.length);
-            out.write(bytesCotizacion, 0, bytesCotizacion.length);
-
-            httpServletResponse.setContentType("application/pdf");
-            httpServletResponse.addHeader("Content-Disposition", "inline; filename=proforma-" + idcotizacion + ".pdf");
-
-            OutputStream os;
-
-            os = httpServletResponse.getOutputStream();
-            out.writeTo(os);
-            os.flush();
-            os.close();
-        } catch (IOException e) {
-            // new ServletException(e);
-            e.printStackTrace();
-        }
+    public ResponseEntity<byte[]> generateBill(@PathVariable("id") Long idcotizacion, HttpServletResponse httpServletResponse) {
+        byte[] cotizacionPdf = proformaService.showCotizacion(idcotizacion);
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF).body(cotizacionPdf);
     }
 }

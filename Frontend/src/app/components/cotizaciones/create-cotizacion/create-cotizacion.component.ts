@@ -296,7 +296,7 @@ export class CreateCotizacionComponent implements OnInit {
       a.remove();
     },
       error => {
-        Swal.fire(`Error al crear factura para imprimir.`, error.message, 'error');
+        Swal.fire(`Error al crear cotizacion para imprimir.`, error.message, 'error');
       });
   }
 }

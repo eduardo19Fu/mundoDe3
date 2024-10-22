@@ -8,6 +8,7 @@ import com.aglayatech.mundo3.model.MovimientoProducto;
 import com.aglayatech.mundo3.model.Producto;
 import com.aglayatech.mundo3.model.TipoComprobante;
 import com.aglayatech.mundo3.model.Usuario;
+import com.aglayatech.mundo3.model.enums.TipoMovimientoProductoEnum;
 import com.aglayatech.mundo3.service.ICompraService;
 import com.aglayatech.mundo3.service.IEstadoService;
 import com.aglayatech.mundo3.service.IMovimientoProductoService;
@@ -169,8 +170,8 @@ public class CompraApiController {
             compra = compraService.getCompra(idcompra);
 
             for(DetalleCompra item : compra.getItems()) {
-                movimiento(item.getProducto(), compra.getUsuario(), item.getCantidad(), "eliminar_compra".toUpperCase());
-                updateExistencias(item.getProducto(), item.getCantidad(), "eliminar_compra".toUpperCase());
+                movimiento(item.getProducto(), compra.getUsuario(), item.getCantidad(), TipoMovimientoProductoEnum.ELIMINAR_COMPRA);
+                updateExistencias(item.getProducto(), item.getCantidad(), TipoMovimientoProductoEnum.ELIMINAR_COMPRA);
             }
 
             compraService.delete(idcompra);
@@ -203,7 +204,7 @@ public class CompraApiController {
      * @param cantidad Es la cantidad a agregar o quitar
      * @param tipoMovimiento Determina el tipo movimiento que se va a realizar
      * */
-    public void updateExistencias(Producto producto, int cantidad, String tipoMovimiento) {
+    public void updateExistencias(Producto producto, int cantidad, TipoMovimientoProductoEnum tipoMovimiento) {
         Producto productoUpdated = new Producto();
 
         if(tipoMovimiento.equals("compra".toUpperCase())) {
@@ -222,10 +223,10 @@ public class CompraApiController {
      * @param cantidad Recibe la cantidad de producto a operar
      *
      * */
-    public void movimiento(Producto producto, Usuario usuario, int cantidad, String tipoMovimiento) {
+    public void movimiento(Producto producto, Usuario usuario, int cantidad, TipoMovimientoProductoEnum tipoMovimiento) {
         MovimientoProducto movimiento = new MovimientoProducto();
 
-        movimiento.setTipoMovimiento(movimientoProductoService.findTipoMovimiento(tipoMovimiento));
+        movimiento.setTipoMovimiento(tipoMovimiento);
         movimiento.setUsuario(usuario);
         movimiento.setProducto(producto);
         movimiento.setStockInicial(producto.getStock());
@@ -262,8 +263,8 @@ public class CompraApiController {
                 productoParametro = item.getProducto();
             }
 
-            movimiento(productoParametro, usuario, item.getCantidad(), "compra".toUpperCase());
-            updateExistencias(productoParametro, item.getCantidad(), "compra".toUpperCase());
+            movimiento(productoParametro, usuario, item.getCantidad(), TipoMovimientoProductoEnum.COMPRA);
+            updateExistencias(productoParametro, item.getCantidad(), TipoMovimientoProductoEnum.COMPRA);
             return true;
         } catch(DataAccessException | ParseException e) {
             e.printStackTrace();

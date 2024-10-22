@@ -1,43 +1,45 @@
 package com.aglayatech.mundo3.service.impl;
 
+import com.aglayatech.mundo3.error.exceptions.ReportGenerationException;
 import com.aglayatech.mundo3.model.Cotizacion;
 import com.aglayatech.mundo3.repository.ICotizacionRepository;
 import com.aglayatech.mundo3.service.ICotizacionService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import java.io.InputStream;
+
+import javax.sql.DataSource;
+
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class CotizacionServiceImpl implements ICotizacionService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FacturaServiceImpl.class);
+    private final ICotizacionRepository proformaRepository;
 
-    @Autowired
-    private ICotizacionRepository proformaRepository;
-
-    @Autowired
-    protected DataSource localDataSource;
+    protected final DataSource localDataSource;
 
     @Override
     public List<Cotizacion> findAll() {
@@ -67,24 +69,31 @@ public class CotizacionServiceImpl implements ICotizacionService {
     /********* PDF REPORTS SERVICES
      * @param idcotizacion***********/
     @Override
-    public byte[] showCotizacion(Long idcotizacion) throws JRException, FileNotFoundException, SQLException {
-        Connection con = localDataSource.getConnection();
-        Map<String, Object> params = new HashMap<>();
-        params.put("ID", idcotizacion);
-        InputStream file = getClass().getResourceAsStream("/reports/cotizacion.jrxml");
+    public byte[] showCotizacion(Long idcotizacion) {
+        try (Connection con = localDataSource.getConnection()) {
 
-        JasperReport jasperReport = JasperCompileManager.compileReport(file);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, con);
+            Map<String, Object> params = new HashMap<>();
+            params.put("ID", idcotizacion);
+            InputStream file = getClass().getResourceAsStream("/reports/cotizacion.jrxml");
+            if(file == null) {
+                log.error("El archivo no se encunetra en la ruta especificada");
+                throw new ReportGenerationException("El archivo no se encuentra en la ruta especificada", null);
+            }
 
-        ByteArrayOutputStream byteArrayOutputStream = getByteArrayOutputStream(jasperPrint);
+            JasperReport jasperReport = JasperCompileManager.compileReport(file);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, con);
 
-        con.close();
-        return byteArrayOutputStream.toByteArray();
+            return JasperExportManager.exportReportToPdf(jasperPrint);
+        } catch (JRException e) {
+            log.error("Ha ocurrido un error durante la generación de la proforma: {}", e.getMessage());
+            throw new ReportGenerationException(e.getMessage(), e.getCause());
+        } catch (SQLException e) {
+            log.error("Ha ocurrido un error al intentar ejecutar una instucción SQL: {}", e.getMessage());
+            throw new com.aglayatech.mundo3.error.exceptions.SQLException(e.getMessage(), e.getCause());
+        } catch (Exception e) {
+            log.error("Ha ocurrido un error inesperado: {}", e.getMessage());
+            throw new RuntimeException("Ha ocurrido un error inesperado: {}", e);
+        }
     }
 
-    protected ByteArrayOutputStream getByteArrayOutputStream(JasperPrint jasperPrint) throws JRException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        JasperExportManager.exportReportToPdfStream(jasperPrint, byteArrayOutputStream);
-        return byteArrayOutputStream;
-    }
 }

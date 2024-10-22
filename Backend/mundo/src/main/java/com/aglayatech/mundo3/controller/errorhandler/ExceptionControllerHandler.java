@@ -37,7 +37,7 @@ public class ExceptionControllerHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {NotFoundException.class})
     public ResponseEntity<ErrorDTO> notFoundExceptionHandler(RuntimeException exception) {
-        log.error("The element was not found", exception);
+        log.error("The element was not found");
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setMessage(exception.getMessage());
         errorDTO.setCause(exception.getCause());

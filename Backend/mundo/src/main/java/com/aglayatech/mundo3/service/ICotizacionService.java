@@ -22,6 +22,6 @@ public interface ICotizacionService {
     public void delete(Long id);
 
     /********* PDF REPORTS SERVICES ***********/
-    public byte[] showCotizacion(Long idcotizacion) throws JRException, FileNotFoundException, SQLException;
+    public byte[] showCotizacion(Long idcotizacion);
 
 }
