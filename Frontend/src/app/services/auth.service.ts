@@ -17,6 +17,7 @@ export class AuthService {
     private http: HttpClient
   ) {
     this.url = 'http://localhost:8182';
+    // this.url = 'http://pangosoft.xyz:8182';
   }
 
   public get usuario(): Usuario {
