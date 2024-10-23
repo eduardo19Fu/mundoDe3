@@ -8,6 +8,7 @@ import { ModalService } from 'src/app/services/productos/modal.service';
 import { JqueryConfigs } from '../../utils/jquery/jquery-utils';
 
 import Swal from 'sweetalert2';
+import { ProductoDTO } from '../../dto/producto-dto';
 
 @Component({
   selector: 'app-productos',
@@ -19,6 +20,7 @@ export class ProductosComponent implements OnInit, AfterViewInit {
 
   title: string;
   productos: Producto[];
+  productosDto: ProductoDTO[];
 
   public productoSeleccionado: Producto;
 
@@ -44,7 +46,8 @@ export class ProductosComponent implements OnInit, AfterViewInit {
    }
 
   ngOnInit(): void {
-    this.getProductos();
+    // this.getProductos();
+    this.getProductosDto();
     this.modalService.notificarUpload.subscribe(producto => {
       this.productos = this.productos.map(productoOriginal => {
         if (producto.idProducto === productoOriginal.idProducto){
@@ -66,6 +69,16 @@ export class ProductosComponent implements OnInit, AfterViewInit {
         this.jQueryConfigs.configToolTip();
       },
       error => { }
+    );
+  }
+
+  getProductosDto(): void {
+    this.productoService.getProductosDto().subscribe(
+      productosDto => {
+        this.productosDto = productosDto;
+        this.jQueryConfigs.configDataTable('productos');
+        this.jQueryConfigs.configToolTip();
+      }
     );
   }
 

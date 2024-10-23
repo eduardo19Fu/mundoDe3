@@ -4,6 +4,7 @@ import { ProductoService } from '../../../../services/producto.service';
 import { Producto } from '../../../../models/producto';
 
 import { JqueryConfigs } from 'src/app/utils/jquery/jquery-utils';
+import { ProductoDTO } from '../../../../dto/producto-dto';
 
 @Component({
   selector: 'app-modal-buscar-producto-movimiento',
@@ -17,6 +18,7 @@ export class ModalBuscarProductoMovimientoComponent implements OnInit {
   
   title: string;
   productos: Producto[];
+  productosDto: ProductoDTO[];
 
   jqueryConfigs: JqueryConfigs = new JqueryConfigs();
 
@@ -27,13 +29,23 @@ export class ModalBuscarProductoMovimientoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadProductos();
+    // this.loadProductos();
+    this.loadProductosDto();
   }
 
   loadProductos(): void {
     this.productoService.getProductosActivosSP().subscribe(
       productos => {
         this.productos = productos;
+        this.jqueryConfigs.configDataTableModal("productos");
+      }
+    );
+  }
+
+  loadProductosDto(): void {
+    this.productoService.getProductosDto().subscribe(
+      productosDto => {
+        this.productosDto = productosDto;
         this.jqueryConfigs.configDataTableModal("productos");
       }
     );

@@ -12,7 +12,7 @@
                 <div class="modal-body table-responsive">
                     <table id="productos"
                         class="table table-hover table-striped table-bordered dataTable dtr-inline table-sm" role="grid"
-                        *ngIf="productos?.length > 0">
+                        *ngIf="productosDto?.length > 0">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -28,15 +28,15 @@
                         </thead>
 
                         <tbody>
-                            <tr *ngFor="let producto of productos">
+                            <tr *ngFor="let producto of productosDto">
                                 <td>{{ producto.idProducto }}</td>
                                 <td>{{ producto.codProducto }}</td>
                                 <td>{{ producto.serie }}</td>
                                 <td>{{ producto.nombre }}</td>
-                                <td>{{ producto.proveedor ? producto.proveedor.nombre : ''}}</td>
+                                <td>{{ producto.proveedor ? producto.nombre : ''}}</td>
                                 <td>{{ producto.precioVenta | currency: "Q" : "symbol" }}</td>
                                 <td>{{ producto.stock }}</td>
-                                <td>{{ producto.marcaProducto ? producto.marcaProducto.marca : ''}}</td>
+                                <td>{{ producto.marcaProducto ? producto.marcaProducto : ''}}</td>
                                 <td class="center-options">
                                     <button class="btn bg-gradient-cyan" (click)="chooseProducto(producto)">
                                         Elegir

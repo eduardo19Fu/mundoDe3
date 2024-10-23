@@ -4,11 +4,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import com.aglayatech.mundo3.dto.ProductoDTO;
 import com.aglayatech.mundo3.model.DetalleCompra;
 import com.aglayatech.mundo3.service.IEstadoService;
 import com.aglayatech.mundo3.service.IMovimientoProductoService;
@@ -107,7 +110,35 @@ public class ProductoServiceImpl implements IProductoService {
 	public List<Producto> findCaducados() {
 		return repoProducto.findCaducados(new Date());
 	}
-	
+
+	/**
+	 * @return
+	 */
+	@Override
+	public List<ProductoDTO> findAllProductosDto() {
+		List<Object[]> results = repoProducto.findAllProductosDto();
+		List<ProductoDTO> productos = new ArrayList<>();
+
+		for(Object[] result : results) {
+			ProductoDTO productoDTO = ProductoDTO.builder()
+					.idProducto((Integer) result[0])
+					.codProducto((String) result[1])
+					.nombre((String) result[2])
+					.precioCompra((BigDecimal) result[3])
+					.precioVenta((BigDecimal) result[4])
+					.precioSugerido((BigDecimal) result[5])
+					.stock((Integer) result[6])
+					.porcentajeGanancia((Float) result[7])
+					.idEstado((Integer) result[8])
+					.estado((String) result[9])
+					.marcaProducto((String) result[10])
+					.tipoProducto((String) result[11])
+					.build();
+			productos.add(productoDTO);
+		}
+		return productos;
+	}
+
 	@Override
 	public List<Producto> findAllByEstado(Estado estado) {
 		return repoProducto.findByEstado(estado);

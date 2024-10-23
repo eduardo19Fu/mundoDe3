@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import com.aglayatech.mundo3.dto.ProductoDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -44,4 +45,6 @@ public interface IProductoRepository extends JpaRepository<Producto, Integer> {
 			+ "WHERE fecha_vencimiento >= curdate()", nativeQuery = true)
 	List<Object[]> findExpired();
 
+	@Query(value = "{call PR_CONSULTAR_PRODUCTOS_DTO()}", nativeQuery = true)
+	List<Object[]> findAllProductosDto();
 }

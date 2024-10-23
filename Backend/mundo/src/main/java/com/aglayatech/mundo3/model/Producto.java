@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -40,9 +41,9 @@ public class Producto implements Serializable {
 	private String codProducto;
 	private String serie;
 	private String nombre;
-	private Double precioCompra;
-	private Double precioVenta;
-	private Double precioSugerido;
+	private BigDecimal precioCompra;
+	private BigDecimal precioVenta;
+	private BigDecimal precioSugerido;
 	private float porcentajeGanancia;
 	private String imagen;
 	private String descripcion;

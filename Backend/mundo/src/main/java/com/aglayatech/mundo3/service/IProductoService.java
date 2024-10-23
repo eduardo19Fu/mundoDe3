@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 
+import com.aglayatech.mundo3.dto.ProductoDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -40,6 +41,8 @@ public interface IProductoService {
 	
 	// Listado de productos caducados
 	public List<Producto> findCaducados();
+
+	public List<ProductoDTO> findAllProductosDto();
 	
 	// SERVICIOS DE REPORTES
 	public String reportExpired() throws JRException, FileNotFoundException, SQLException;

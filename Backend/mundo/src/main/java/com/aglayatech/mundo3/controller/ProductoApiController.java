@@ -12,10 +12,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.aglayatech.mundo3.dto.ProductoDTO;
 import com.aglayatech.mundo3.generics.Excepcion;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -25,7 +26,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,21 +48,15 @@ import net.sf.jasperreports.engine.JRException;
 
 import javax.servlet.http.HttpServletResponse;
 
-@CrossOrigin(origins = { "http://localhost:4200", "https://dtodojalapa.xyz", "http://dtodojalapa.xyz" })
 @RestController
 @RequestMapping(value = "/api")
+@RequiredArgsConstructor
+@Slf4j
 public class ProductoApiController {
 
-	private final static Logger logger = LoggerFactory.getLogger(ProductoApiController.class);
-
-	@Autowired
-	private IProductoService serviceProducto;
-
-	@Autowired
-	private IEstadoService serviceEstado;
-
-	@Autowired
-	private IUploadFileService serviceUpload;
+	private final IProductoService serviceProducto;
+	private final IEstadoService serviceEstado;
+	private final IUploadFileService serviceUpload;
 
 	@GetMapping(value = "/productos")
 	public List<Producto> index() {
@@ -84,6 +78,11 @@ public class ProductoApiController {
 	public List<Producto> findAll(){
 		Estado estado = serviceEstado.findById(1);
 		return serviceProducto.findAllByEstado(estado);
+	}
+
+	@GetMapping(value = "/productos-dto")
+	public List<ProductoDTO> findAllDto() {
+		return serviceProducto.findAllProductosDto();
 	}
 
 	@GetMapping("/productos/max-productos/get")
@@ -340,7 +339,7 @@ public class ProductoApiController {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream(bytesInventoryReport.length);
 		outputStream.write(bytesInventoryReport, 0, bytesInventoryReport.length);
 
-		logger.info("Enviando Reporte con fecha {}", fecha);
+		log.info("Enviando Reporte con fecha {}", fecha);
 		httpServletResponse.setContentType("application/pdf");
 		httpServletResponse.addHeader("Content-Disposition", "inline; filename=inventory.pdf");
 
@@ -351,7 +350,7 @@ public class ProductoApiController {
 			os.flush();
 			os.close();
 		} catch(IOException e) {
-			logger.error("Error ocurrido {}", e.getMessage());
+			log.error("Error ocurrido {}", e.getMessage());
 			e.printStackTrace();
 		}
 

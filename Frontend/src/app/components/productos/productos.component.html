@@ -28,7 +28,7 @@
         </div>
 
         <table id="productos" class="table table-hover table-striped table-bordered dataTable dtr-inline table-sm"
-            role="grid" *ngIf="productos?.length > 0">
+            role="grid" *ngIf="productosDto?.length > 0">
             <thead>
                 <tr>
                     <!-- <th>#</th> -->
@@ -45,24 +45,20 @@
             </thead>
 
             <tbody>
-                <tr *ngFor="let producto of productos">
-                    <!-- <td>
-                        
-                    </td> -->
+                <tr *ngFor="let producto of productosDto">
                     <td>{{producto.codProducto}}</td>
-                    <!-- <td>{{producto.serie}}</td> -->
                     <td>{{producto.nombre}}</td>
                     <td>{{producto.precioVenta | currency: "Q" : "symbol"}}</td>
                     <td>{{ producto.precioCompra | currency: "Q" : "symbol" }}</td>
                     <td>{{producto.stock}}</td>
-                    <td>{{producto.proveedor ? producto.proveedor.nombre : ''}}</td>
+                    <td>{{producto.proveedor ? producto.proveedor : ''}}</td>
                     <td>
                         <span class="badge"
-                            [ngClass]="{'badge-primary': producto.estado.estado === 'ACTIVO', 
-                                        'badge-dark': producto.estado.estado === 'INACTIVO',
-                                        'badge-warning': producto.estado.estado === 'POR AGOTARSE',
-                                        'badge-danger': producto.estado.estado === 'AGOTADO'}">
-                            {{producto.estado.estado}}
+                            [ngClass]="{'badge-primary': producto.estado === 'ACTIVO', 
+                                        'badge-dark': producto.estado === 'INACTIVO',
+                                        'badge-warning': producto.estado === 'POR AGOTARSE',
+                                        'badge-danger': producto.estado === 'AGOTADO'}">
+                            {{producto.estado}}
                         </span>
                     </td>
                     <td class="center-options">

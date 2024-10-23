@@ -47,6 +47,15 @@ export class ProductoService {
     );
   }
 
+  getProductosDto(): Observable<any> {
+    return this.http.get<any>(`${this.url}/productos-dto`).pipe(
+      catchError(e => {
+        console.error(e);
+        return throwError(e);
+      })
+    );
+  }
+
   getProducto(id: number): Observable<Producto> {
     return this.http.get<Producto>(`${this.url}/productos/${id}`).pipe(
       catchError(e => {
