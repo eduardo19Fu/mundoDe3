@@ -33,4 +33,5 @@ public class ProductoDTO {
     private String tipoProducto;
     private String estado;
     private int idEstado;
+    private String proveedor;
 }

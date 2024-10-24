@@ -133,6 +133,7 @@ public class ProductoServiceImpl implements IProductoService {
 					.estado((String) result[9])
 					.marcaProducto((String) result[10])
 					.tipoProducto((String) result[11])
+                    .proveedor((String) result[12])
 					.build();
 			productos.add(productoDTO);
 		}
